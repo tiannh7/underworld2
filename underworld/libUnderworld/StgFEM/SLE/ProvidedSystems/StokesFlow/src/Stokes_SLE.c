@@ -235,7 +235,7 @@ double Stokes_ContinuityResidual( Stokes_SLE* self ) {
   Vec H = self->hForceVec->vector;
   Vec u = self->uSolnVec->vector;
   Vec p = self->pSolnVec->vector;
-  Mat C = PETSC_NULL;
+  Mat C = PETSC_NULLPTR;
   
   if (self->cStiffMat) C = self->cStiffMat->matrix;
   
@@ -244,7 +244,7 @@ double Stokes_ContinuityResidual( Stokes_SLE* self ) {
   
   VecDuplicate( H, &pStar );
   MatMultTranspose( G, u, pStar );                // {pStar} = [G]^T{u}
-  if( C != PETSC_NULL ) {   
+  if( C != PETSC_NULLPTR ) {   
     MatMultAdd( C, p, pStar, pStar );	/* {pStar} = {pStar} + [C] {p} */
   }
   VecAYPX( pStar, -1.0, H );                      // {pStar} = {H} - {pStar}

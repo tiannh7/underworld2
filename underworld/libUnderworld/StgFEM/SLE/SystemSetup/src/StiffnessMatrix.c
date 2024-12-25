@@ -192,7 +192,7 @@ void _StiffnessMatrix_Init(
     self->rowInc = IArray_New();
     self->colInc = IArray_New();
 
-    self->matrix = PETSC_NULL;
+    self->matrix = PETSC_NULLPTR;
 }
 
 void _StiffnessMatrix_Delete( void* stiffnessMatrix ) {
@@ -830,7 +830,7 @@ void StiffnessMatrix_RefreshMatrix( StiffnessMatrix* self ) {
 
     assert( self && Stg_CheckType( self, StiffnessMatrix ) );
 
-    if( self->matrix != PETSC_NULL )
+    if( self->matrix != PETSC_NULLPTR )
         Stg_MatDestroy(&self->matrix );
 
     MatCreate( self->comm, &self->matrix );
@@ -840,15 +840,15 @@ void StiffnessMatrix_RefreshMatrix( StiffnessMatrix* self ) {
 
     if( self->diagonalNonZeroIndices || self->offDiagonalNonZeroIndices ) {
         if( nProcs > 1 )
-            MatMPIAIJSetPreallocation( self->matrix, PETSC_NULL, self->diagonalNonZeroIndices, PETSC_NULL, self->offDiagonalNonZeroIndices );
+            MatMPIAIJSetPreallocation( self->matrix, PETSC_NULLPTR, self->diagonalNonZeroIndices, PETSC_NULLPTR, self->offDiagonalNonZeroIndices );
         else
-            MatSeqAIJSetPreallocation( self->matrix, PETSC_NULL, self->diagonalNonZeroIndices );
+            MatSeqAIJSetPreallocation( self->matrix, PETSC_NULLPTR, self->diagonalNonZeroIndices );
     }
     else {
         if( nProcs > 1 )
-            MatMPIAIJSetPreallocation( self->matrix, self->nonZeroCount, PETSC_NULL, self->nonZeroCount, PETSC_NULL );
+            MatMPIAIJSetPreallocation( self->matrix, self->nonZeroCount, PETSC_NULLPTR, self->nonZeroCount, PETSC_NULLPTR );
         else
-            MatSeqAIJSetPreallocation( self->matrix, self->nonZeroCount, PETSC_NULL );
+            MatSeqAIJSetPreallocation( self->matrix, self->nonZeroCount, PETSC_NULLPTR );
     }
 
 #if ( (PETSC_VERSION_MAJOR>=3) && (PETSC_VERSION_MINOR>=3) )

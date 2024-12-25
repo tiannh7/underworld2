@@ -1182,7 +1182,7 @@ int GenerateEquationNumbering(
 		_g_node_id[i] = g_node_id[i];
 	}
 	ISCreateGeneralWithArray( PETSC_COMM_WORLD, nlocal, _g_node_id, &is_gnode );
-	VecScatterCreate( g_ownership, is_gnode, local_ownership, PETSC_NULL, &vscat_ownership );
+	VecScatterCreate( g_ownership, is_gnode, local_ownership, PETSC_NULLPTR, &vscat_ownership );
 
 
 	/* assign unique equation numbers */
@@ -1270,7 +1270,7 @@ int GenerateEquationNumbering(
 	VecSetFromOptions( local_eqnum );
 
 	ISCreateGeneralWithArray( PETSC_COMM_SELF, number_to_fetch, to_fetch, &is_eqnum );
-	VecScatterCreate( global_eqnum, is_eqnum, local_eqnum, PETSC_NULL, &vscat_eqnum );
+	VecScatterCreate( global_eqnum, is_eqnum, local_eqnum, PETSC_NULLPTR, &vscat_eqnum );
 
 	VecSet( local_eqnum, -6699 );
 	_VecScatterBeginEnd( vscat_eqnum, global_eqnum, local_eqnum, INSERT_VALUES, SCATTER_FORWARD );
@@ -1369,7 +1369,7 @@ int GenerateEquationNumbering(
 		VecSetFromOptions( mapped );
 
 		ISCreateGeneralWithArray( PETSC_COMM_SELF, npx*dof, from, &is_from );
-		VecScatterCreate( global_eqnum, is_from, mapped, PETSC_NULL, &vscat_p );
+		VecScatterCreate( global_eqnum, is_from, mapped, PETSC_NULLPTR, &vscat_p );
 
 		_VecScatterBeginEnd( vscat_p, global_eqnum, mapped, INSERT_VALUES, SCATTER_FORWARD );
 		if( npx>0 ) {
@@ -1423,7 +1423,7 @@ int GenerateEquationNumbering(
 		VecSetFromOptions( mapped );
 
 		ISCreateGeneralWithArray( PETSC_COMM_SELF, npy*dof, from, &is_from );
-		VecScatterCreate( global_eqnum, is_from, mapped, PETSC_NULL, &vscat_p );
+		VecScatterCreate( global_eqnum, is_from, mapped, PETSC_NULLPTR, &vscat_p );
 
 		_VecScatterBeginEnd( vscat_p, global_eqnum, mapped, INSERT_VALUES, SCATTER_FORWARD );
 		if( npy>0 ) {
@@ -1476,7 +1476,7 @@ int GenerateEquationNumbering(
 		VecSetFromOptions( mapped );
 
 		ISCreateGeneralWithArray( PETSC_COMM_SELF, npz*dof, from, &is_from );
-		VecScatterCreate( global_eqnum, is_from, mapped, PETSC_NULL, &vscat_p );
+		VecScatterCreate( global_eqnum, is_from, mapped, PETSC_NULLPTR, &vscat_p );
 
 		_VecScatterBeginEnd( vscat_p, global_eqnum, mapped, INSERT_VALUES, SCATTER_FORWARD );
 		if( npz>0 ) {
@@ -1525,7 +1525,7 @@ int GenerateEquationNumbering(
 		VecCreate( PETSC_COMM_SELF, &all_my_eqnums );
 		VecSetSizes( all_my_eqnums, PETSC_DECIDE, nlocal*dof );
 		VecSetFromOptions( all_my_eqnums );
-		VecScatterCreate( global_eqnum, is_all_my_eqnums, all_my_eqnums, PETSC_NULL, &vscat_p );
+		VecScatterCreate( global_eqnum, is_all_my_eqnums, all_my_eqnums, PETSC_NULLPTR, &vscat_p );
 		_VecScatterBeginEnd( vscat_p, global_eqnum, all_my_eqnums, INSERT_VALUES, SCATTER_FORWARD );
 		VecGetArray( all_my_eqnums, &_all_my_eqnums );
 

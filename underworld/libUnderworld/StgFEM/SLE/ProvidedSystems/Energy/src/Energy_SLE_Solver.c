@@ -74,7 +74,7 @@ void _Energy_SLE_Solver_Init( Energy_SLE_Solver* self ) {
 	self->isConstructed = True;
 	self->residual = NULL;
 	//self->ksp = NULL;
-	self->ksp = PETSC_NULL;
+	self->ksp = PETSC_NULLPTR;
 }
 void Energy_SLE_Solver_InitAll( Energy_SLE_Solver* solver ) {
 	Energy_SLE_Solver* self = (Energy_SLE_Solver*)solver;
@@ -194,7 +194,7 @@ void _Energy_SLE_Solver_Solve( void* sleSolver, void* standardSLE ) {
 	Journal_DPrintf( self->debug, "In %s - for standard SLE solver\n", __func__ );
 	Stream_IndentBranch( StgFEM_SLE_ProvidedSystems_Energy_Debug );
 	
-    if( self->ksp == PETSC_NULL ){
+    if( self->ksp == PETSC_NULLPTR ){
       KSPCreate( sle->comm, &self->ksp );
       KSPSetOptionsPrefix( self->ksp, "EnergySolver_" );
     }
@@ -218,7 +218,7 @@ void _Energy_SLE_Solver_Solve( void* sleSolver, void* standardSLE ) {
 
     isNull = Energy_SLE_HasNullSpace(((StiffnessMatrix**)sle->stiffnessMatrices->data)[0]->matrix);
     if(isNull) {
-      MatNullSpaceCreate(PETSC_COMM_WORLD, PETSC_TRUE, 0, PETSC_NULL, &nullsp);
+      MatNullSpaceCreate(PETSC_COMM_WORLD, PETSC_TRUE, 0, PETSC_NULLPTR, &nullsp);
 #if ( (PETSC_VERSION_MAJOR >= 3) && (PETSC_VERSION_MINOR <6) )
       KSPSetNullSpace(self->ksp, nullsp);
 #else

@@ -162,7 +162,7 @@ void _SolutionVector_Destroy( void* solutionVector, void* data ) {
 
    if( self->feVariable ) Stg_Component_Destroy( self->feVariable, data, False );
 
-	if( self->vector != PETSC_NULL )
+	if( self->vector != PETSC_NULLPTR )
 		Stg_VecDestroy(&self->vector );
 }
 

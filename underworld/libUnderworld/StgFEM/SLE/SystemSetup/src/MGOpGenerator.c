@@ -37,12 +37,12 @@ MGOpGenerator* _MGOpGenerator_New(  MGOPGENERATOR_DEFARGS  ) {
 
 	/* stuff previously housed in the MatrixSolver class */
 	self->solver = malloc( sizeof( MGSolver_PETScData ) );
-	self->solver->ksp = PETSC_NULL;
-	self->solver->matrix = PETSC_NULL;
-	self->solver->inversion = PETSC_NULL;
-	self->solver->residual = PETSC_NULL;
-	self->solver->curRHS = PETSC_NULL;
-	self->solver->curSolution = PETSC_NULL;
+	self->solver->ksp = PETSC_NULLPTR;
+	self->solver->matrix = PETSC_NULLPTR;
+	self->solver->inversion = PETSC_NULLPTR;
+	self->solver->residual = PETSC_NULLPTR;
+	self->solver->curRHS = PETSC_NULLPTR;
+	self->solver->curSolution = PETSC_NULLPTR;
 	self->solver->expiredResidual = True;
 	self->solver->matrixChanged = True;
 
@@ -75,12 +75,12 @@ void _MGOpGenerator_Delete( void* mgOpGenerator ) {
 
 	/* this stuff was previously taken care of in the MatrixSolver class */
 	if( self->solver ) {
-            /*if( self->solver->ksp != PETSC_NULL )         Stg_KSPDestroy(&self->solver->ksp );*/
-		if( self->solver->matrix != PETSC_NULL )      Stg_MatDestroy(&self->solver->matrix );
-		if( self->solver->inversion != PETSC_NULL )   Stg_MatDestroy(&self->solver->inversion );
-		if( self->solver->residual != PETSC_NULL )    Stg_VecDestroy(&self->solver->residual );
-		if( self->solver->curRHS != PETSC_NULL )      Stg_VecDestroy(&self->solver->curRHS );
-		if( self->solver->curSolution != PETSC_NULL ) Stg_VecDestroy(&self->solver->curSolution );
+            /*if( self->solver->ksp != PETSC_NULLPTR )         Stg_KSPDestroy(&self->solver->ksp );*/
+		if( self->solver->matrix != PETSC_NULLPTR )      Stg_MatDestroy(&self->solver->matrix );
+		if( self->solver->inversion != PETSC_NULLPTR )   Stg_MatDestroy(&self->solver->inversion );
+		if( self->solver->residual != PETSC_NULLPTR )    Stg_VecDestroy(&self->solver->residual );
+		if( self->solver->curRHS != PETSC_NULLPTR )      Stg_VecDestroy(&self->solver->curRHS );
+		if( self->solver->curSolution != PETSC_NULLPTR ) Stg_VecDestroy(&self->solver->curSolution );
 		free( self->solver );
 	}
 

@@ -107,22 +107,22 @@ PetscErrorCode BSSCR_StokesCreateOperatorSummary( Mat K, Mat G, Mat C, Vec f, Ve
 	PetscViewerASCIIPrintf( v, "\nInput matrices:\n");
 	PetscViewerASCIIPushTab(v);
 	
-	PetscOptionsGetString( PETSC_NULL,"-stokes_A11",op_name,PETSC_MAX_PATH_LEN-1,&flg );
+	PetscOptionsGetString( PETSC_NULLPTR,"-stokes_A11",op_name,PETSC_MAX_PATH_LEN-1,&flg );
 	if (flg) {	PetscViewerASCIIPrintf( v, "A11: %s\n", op_name );	}
 	
-	PetscOptionsGetString( PETSC_NULL,"-stokes_A12",op_name,PETSC_MAX_PATH_LEN-1,&flg );
+	PetscOptionsGetString( PETSC_NULLPTR,"-stokes_A12",op_name,PETSC_MAX_PATH_LEN-1,&flg );
 	if (flg) {	PetscViewerASCIIPrintf( v, "A12: %s\n", op_name );	}
 	
-	PetscOptionsGetString( PETSC_NULL,"-stokes_A22",op_name,PETSC_MAX_PATH_LEN-1,&flg );
+	PetscOptionsGetString( PETSC_NULLPTR,"-stokes_A22",op_name,PETSC_MAX_PATH_LEN-1,&flg );
 	if (flg) {	PetscViewerASCIIPrintf( v, "A22: %s\n", op_name );	}
 	
-	PetscOptionsGetString( PETSC_NULL,"-stokes_Smat",op_name,PETSC_MAX_PATH_LEN-1,&flg );
+	PetscOptionsGetString( PETSC_NULLPTR,"-stokes_Smat",op_name,PETSC_MAX_PATH_LEN-1,&flg );
 	if (flg) {	PetscViewerASCIIPrintf( v, "Smat: %s\n", op_name );	}
 	
-	PetscOptionsGetString( PETSC_NULL,"-stokes_b1",op_name,PETSC_MAX_PATH_LEN-1,&flg );
+	PetscOptionsGetString( PETSC_NULLPTR,"-stokes_b1",op_name,PETSC_MAX_PATH_LEN-1,&flg );
 	if (flg) {	PetscViewerASCIIPrintf( v, "b1: %s\n", op_name );	}
 	
-	PetscOptionsGetString( PETSC_NULL,"-stokes_b2",op_name,PETSC_MAX_PATH_LEN-1,&flg );
+	PetscOptionsGetString( PETSC_NULLPTR,"-stokes_b2",op_name,PETSC_MAX_PATH_LEN-1,&flg );
 	if (flg) {	PetscViewerASCIIPrintf( v, "b2: %s\n", op_name );	}
 	
 	PetscViewerASCIIPopTab(v);

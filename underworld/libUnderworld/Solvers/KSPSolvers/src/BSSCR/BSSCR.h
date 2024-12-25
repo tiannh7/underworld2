@@ -12,7 +12,7 @@
 #include "common-driver-utils.h" /* has #include "stokes_block_scaling.h" */
 #include "petsccompat.h"
 //#include "StokesBlockKSPInterface.h"
-/* added K2_NULL type so that the remaining types enumerate to > 0 so can test with PETSC_NULL or K2_NULL (both == 0) */
+/* added K2_NULL type so that the remaining types enumerate to > 0 so can test with PETSC_NULLPTR or K2_NULL (both == 0) */
 typedef enum {K2_NULL, K2_DGMGD, K2_GMG, K2_GG, K2_SLE} K2Type;
 typedef enum {DEFAULT, KONLY} Stype;
 

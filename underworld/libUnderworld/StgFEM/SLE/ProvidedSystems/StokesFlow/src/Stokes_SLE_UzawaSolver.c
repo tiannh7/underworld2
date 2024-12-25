@@ -187,13 +187,13 @@ void _Stokes_SLE_UzawaSolver_Build( void* solver, void* stokesSLE ) {
 		KSPSetOptionsPrefix( self->pcSolver, "Uzawa_pcSolver_" );
 	}
 	else 
-		self->pcSolver = PETSC_NULL;
+		self->pcSolver = PETSC_NULLPTR;
 
-	if( self->pTempVec != PETSC_NULL ) Stg_VecDestroy(&self->pTempVec );
-	if( self->rVec != PETSC_NULL )     Stg_VecDestroy(&self->rVec );
-	if( self->sVec != PETSC_NULL )     Stg_VecDestroy(&self->sVec );
-	if( self->fTempVec != PETSC_NULL ) Stg_VecDestroy(&self->fTempVec );
-	if( self->vStarVec != PETSC_NULL ) Stg_VecDestroy(&self->vStarVec );
+	if( self->pTempVec != PETSC_NULLPTR ) Stg_VecDestroy(&self->pTempVec );
+	if( self->rVec != PETSC_NULLPTR )     Stg_VecDestroy(&self->rVec );
+	if( self->sVec != PETSC_NULLPTR )     Stg_VecDestroy(&self->sVec );
+	if( self->fTempVec != PETSC_NULLPTR ) Stg_VecDestroy(&self->fTempVec );
+	if( self->vStarVec != PETSC_NULLPTR ) Stg_VecDestroy(&self->vStarVec );
 
  	Journal_DPrintfL( self->debug, 2, "Allocate the auxillary vectors pTemp, r, s, fTemp and vStar.\n" ); 
 	VecDuplicate( sle->pSolnVec->vector, &self->pTempVec );
@@ -230,7 +230,7 @@ void _Stokes_SLE_UzawaSolver_AssignFromXML( void* solver, Stg_ComponentFactory* 
 
 	_Stokes_SLE_UzawaSolver_Init( self, preconditioner, maxUzawaIterations, minUzawaIterations, tolerance, useAbsoluteTolerance, monitor );
 
-	if( self->velSolver == PETSC_NULL ) {
+	if( self->velSolver == PETSC_NULLPTR ) {
 	    //KSPCreate( MPI_COMM_WORLD, &self->velSolver );
 	    //KSPSetOptionsPrefix( self->pcSolver, "Uzawa_velSolver_" );
 	}
@@ -249,11 +249,11 @@ void _Stokes_SLE_UzawaSolver_Destroy( void* solver, void* data ) {
         if ( self->preconditioner ) { Stg_KSPDestroy(&self->pcSolver ); }
 
 	Journal_DPrintfL( self->debug, 2, "Destroying temporary solver vectors.\n" );
-	if( self->pTempVec != PETSC_NULL ) Stg_VecDestroy(&self->pTempVec );
-	if( self->rVec != PETSC_NULL )     Stg_VecDestroy(&self->rVec );
-	if( self->sVec != PETSC_NULL )     Stg_VecDestroy(&self->sVec );
-	if( self->fTempVec != PETSC_NULL ) Stg_VecDestroy(&self->fTempVec );
-	if( self->vStarVec != PETSC_NULL ) Stg_VecDestroy(&self->vStarVec );
+	if( self->pTempVec != PETSC_NULLPTR ) Stg_VecDestroy(&self->pTempVec );
+	if( self->rVec != PETSC_NULLPTR )     Stg_VecDestroy(&self->rVec );
+	if( self->sVec != PETSC_NULLPTR )     Stg_VecDestroy(&self->sVec );
+	if( self->fTempVec != PETSC_NULLPTR ) Stg_VecDestroy(&self->fTempVec );
+	if( self->vStarVec != PETSC_NULLPTR ) Stg_VecDestroy(&self->vStarVec );
 	Stream_UnIndentBranch( StgFEM_Debug );
    _SLE_Solver_Destroy( self, data );
 
@@ -521,7 +521,7 @@ void _Stokes_SLE_UzawaSolver_Solve( void* solver, void* stokesSLE ) {
 	*/
 	
 	Journal_DPrintfL( self->debug, 2, "Building Fhat - h.\n" );
-	PetscOptionsHasName(PETSC_NULL,"-uzawa_printksptimes",&flg);
+	PetscOptionsHasName(PETSC_NULLPTR,"-uzawa_printksptimes",&flg);
 	KSPSetTolerances( velSolver, self->tolerance, PETSC_DEFAULT, PETSC_DEFAULT, PETSC_DEFAULT );
 	if (flg) {
 	    ksptime = MPI_Wtime();
@@ -659,7 +659,7 @@ void _Stokes_SLE_UzawaSolver_Solve( void* solver, void* stokesSLE ) {
 		*/
 		
 		if ( pcSolver ) {
-		    PetscOptionsHasName(PETSC_NULL,"-uzawa_printksptimes",&flg);
+		    PetscOptionsHasName(PETSC_NULLPTR,"-uzawa_printksptimes",&flg);
 		    if (flg) {
 			ksptime = MPI_Wtime();
 		    }
@@ -714,7 +714,7 @@ void _Stokes_SLE_UzawaSolver_Solve( void* solver, void* stokesSLE ) {
 		Journal_DPrintfL( self->debug, 2, "Uzawa inner iteration step\n");
 		
 		//START OF INNER ITERATIONS!!!!
-		PetscOptionsHasName(PETSC_NULL,"-uzawa_printksptimes",&flg);
+		PetscOptionsHasName(PETSC_NULLPTR,"-uzawa_printksptimes",&flg);
 		/*get initial wall time for inner loop*/
 		self->inneritsinitialtime = MPI_Wtime();
 		if (flg) {
@@ -1011,7 +1011,7 @@ PetscErrorCode _Stokes_SLE_UzawaSolver_FormResidual( void *stokesSLE, void *solv
         if (f_star==NULL){     Stg_SETERRQ( PETSC_ERR_ARG_NULL, "f* is NULL" ); }
 	if (q_star==NULL) {    Stg_SETERRQ( PETSC_ERR_ARG_NULL, "q* is NULL" ); }
 
-	A22 = PETSC_NULL;
+	A22 = PETSC_NULLPTR;
 	if (sle->cStiffMat!=NULL) {
 		A22 = sle->cStiffMat->matrix;
 	}
@@ -1031,7 +1031,7 @@ PetscErrorCode _Stokes_SLE_UzawaSolver_FormResidual( void *stokesSLE, void *solv
 	_Stokes_SLE_UzawaSolver_GetRhs( stokesSLE, solver, r );  /* r <- f_hat */
 
 	/* correct for non zero A22 */
-	if (A22!=PETSC_NULL) {
+	if (A22!=PETSC_NULLPTR) {
 		MatMultAdd( A22, x2, r, r );  /* r <- r + A22 p */
 	}
 

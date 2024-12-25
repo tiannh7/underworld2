@@ -29,18 +29,18 @@ PetscErrorCode MG_inner_solver_mgContext_initialise(MGContext *mgCtx) {
 
   /* 2) Read options from petsc dictionary */
 
-  PetscOptionsGetTruth(PETSC_NULL, "-mg_accelerating_smoothing",
+  PetscOptionsGetTruth(PETSC_NULLPTR, "-mg_accelerating_smoothing",
                        &mgCtx->useAcceleratingSmoothingMG, &found);
-  PetscOptionsGetTruth(PETSC_NULL, "-mg_accelerating_smoothing_view",
+  PetscOptionsGetTruth(PETSC_NULLPTR, "-mg_accelerating_smoothing_view",
                        &mgCtx->acceleratingSmoothingMGView, &found);
-  PetscOptionsGetInt(PETSC_NULL, "-mg_smooths_to_start",
-                     &(mgCtx->smoothsToStartWith), PETSC_NULL);
-  PetscOptionsGetInt(PETSC_NULL, "-mg_smooths_max", &(mgCtx->smoothsMax),
-                     PETSC_NULL);
-  PetscOptionsGetInt(PETSC_NULL, "-mg_smoothing_increment",
-                     &(mgCtx->smoothingIncrement), PETSC_NULL);
-  PetscOptionsGetInt(PETSC_NULL, "-mg_target_cycles_10fold_reduction",
-                     &(mgCtx->targetCyclesForTenfoldReduction), PETSC_NULL);
+  PetscOptionsGetInt(PETSC_NULLPTR, "-mg_smooths_to_start",
+                     &(mgCtx->smoothsToStartWith), PETSC_NULLPTR);
+  PetscOptionsGetInt(PETSC_NULLPTR, "-mg_smooths_max", &(mgCtx->smoothsMax),
+                     PETSC_NULLPTR);
+  PetscOptionsGetInt(PETSC_NULLPTR, "-mg_smoothing_increment",
+                     &(mgCtx->smoothingIncrement), PETSC_NULLPTR);
+  PetscOptionsGetInt(PETSC_NULLPTR, "-mg_target_cycles_10fold_reduction",
+                     &(mgCtx->targetCyclesForTenfoldReduction), PETSC_NULLPTR);
 
   mgCtx->currentNumberOfSmooths = mgCtx->smoothsToStartWith;
 
@@ -65,7 +65,7 @@ PetscErrorCode MG_inner_solver_pcmg_setup(KSP_BSSCR *bsscrp_self,
   PetscFunctionBegin;
 
   PCSetType(pc_MG, PCMG);
-  PCMGSetLevels(pc_MG, bsscrp_self->mg->nLevels, PETSC_NULL);
+  PCMGSetLevels(pc_MG, bsscrp_self->mg->nLevels, PETSC_NULLPTR);
 
   // PCMGSetType(pc_MG, PC_MG_MULTIPLICATIVE); /* Breaks the accelrating MG */
 
@@ -91,7 +91,7 @@ PetscErrorCode MG_inner_solver_pcmg_setup(KSP_BSSCR *bsscrp_self,
 
   if (mgCtx->useAcceleratingSmoothingMG)
     KSPMonitorSet(ksp_inner, KSPCycleEffectivenessMonitorAndAdjust, mgCtx,
-                  PETSC_NULL);
+                  PETSC_NULLPTR);
 
   PetscFunctionReturn(0);
 }

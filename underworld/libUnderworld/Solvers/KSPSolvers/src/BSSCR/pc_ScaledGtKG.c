@@ -104,7 +104,7 @@ PetscErrorCode BSSCR_PCScGtKGBBtContainsConstantNullSpace( PC pc, PetscTruth *ha
 	Mat BBt,A;
 	
 	
-	Stg_KSPGetOperators( ctx->ksp_BBt, &BBt, PETSC_NULL, PETSC_NULL );
+	Stg_KSPGetOperators( ctx->ksp_BBt, &BBt, PETSC_NULLPTR, PETSC_NULLPTR );
 	A = BBt;
 	
 	MatGetVecs( A, &r, &l ); // l = A r
@@ -145,10 +145,10 @@ PetscErrorCode BSSCR_PCSetUp_ScGtKG( PC pc )
 {
 	PC_SC_GtKG    ctx = (PC_SC_GtKG)pc->data;
 	
-	if( ctx->F == PETSC_NULL ) {   Stg_SETERRQ( PETSC_ERR_SUP, "gtkg: F not set" );   }
-	if( ctx->Bt == PETSC_NULL ) {  Stg_SETERRQ( PETSC_ERR_SUP, "gtkg: Bt not set" );  }
+	if( ctx->F == PETSC_NULLPTR ) {   Stg_SETERRQ( PETSC_ERR_SUP, "gtkg: F not set" );   }
+	if( ctx->Bt == PETSC_NULLPTR ) {  Stg_SETERRQ( PETSC_ERR_SUP, "gtkg: Bt not set" );  }
 	
-	if(ctx->ksp_BBt==PETSC_NULL) {
+	if(ctx->ksp_BBt==PETSC_NULLPTR) {
 		BSSCR_PCScGtKGUseStandardBBtOperator( pc ) ;
 	}
 	
@@ -165,18 +165,18 @@ PetscErrorCode BSSCR_PCDestroy_ScGtKG( PC pc )
 	PC_SC_GtKG ctx = (PC_SC_GtKG)pc->data;
 	
 	
-	if( ctx == PETSC_NULL ) {	PetscFunctionReturn(0); }
+	if( ctx == PETSC_NULLPTR ) {	PetscFunctionReturn(0); }
 	
-	if( ctx->ksp_BBt != PETSC_NULL ) {	Stg_KSPDestroy(&ctx->ksp_BBt );		}
+	if( ctx->ksp_BBt != PETSC_NULLPTR ) {	Stg_KSPDestroy(&ctx->ksp_BBt );		}
 	
-	if( ctx->s != PETSC_NULL ) {		Stg_VecDestroy(&ctx->s );		}
-	if( ctx->X != PETSC_NULL ) {		Stg_VecDestroy(&ctx->X );		}
-	if( ctx->t != PETSC_NULL ) {		Stg_VecDestroy(&ctx->t );		}
+	if( ctx->s != PETSC_NULLPTR ) {		Stg_VecDestroy(&ctx->s );		}
+	if( ctx->X != PETSC_NULLPTR ) {		Stg_VecDestroy(&ctx->X );		}
+	if( ctx->t != PETSC_NULLPTR ) {		Stg_VecDestroy(&ctx->t );		}
 	
-	if( ctx->X1 != PETSC_NULL ) {		Stg_VecDestroy(&ctx->X1 );		}
-	if( ctx->X2 != PETSC_NULL ) {		Stg_VecDestroy(&ctx->X2 );		}
-	if( ctx->Y1 != PETSC_NULL ) {		Stg_VecDestroy(&ctx->Y1 );		}
-	if( ctx->Y2 != PETSC_NULL ) {		Stg_VecDestroy(&ctx->Y2 );		}
+	if( ctx->X1 != PETSC_NULLPTR ) {		Stg_VecDestroy(&ctx->X1 );		}
+	if( ctx->X2 != PETSC_NULLPTR ) {		Stg_VecDestroy(&ctx->X2 );		}
+	if( ctx->Y1 != PETSC_NULLPTR ) {		Stg_VecDestroy(&ctx->Y1 );		}
+	if( ctx->Y2 != PETSC_NULLPTR ) {		Stg_VecDestroy(&ctx->Y2 );		}
 	
 	PetscFree( ctx );
 	
@@ -281,7 +281,7 @@ PetscErrorCode BSSCR_PCApply_ScGtKG( PC pc, Vec x, Vec y )
 	
 	
 	if( ctx->BBt_has_cnst_nullspace == PETSC_TRUE ) {
-	  BSSCR_VecRemoveConstNullspace( x, PETSC_NULL );
+	  BSSCR_VecRemoveConstNullspace( x, PETSC_NULLPTR );
 	}
 	PetscGetTime(&t0);
 	KSPSolve( ksp, x, t ); /* t <- GtG_inv x */
@@ -305,7 +305,7 @@ PetscErrorCode BSSCR_PCApply_ScGtKG( PC pc, Vec x, Vec y )
 	MatMultTranspose( Bt, X, t ); /* t <- Gt X */
 	
 	if( ctx->BBt_has_cnst_nullspace == PETSC_TRUE ) {
-		BSSCR_VecRemoveConstNullspace( t, PETSC_NULL );
+		BSSCR_VecRemoveConstNullspace( t, PETSC_NULLPTR );
 	}
 	PetscGetTime(&t0);
 	KSPSolve( ksp, t, y ); /* y <- GtG_inv t */
@@ -368,7 +368,7 @@ PetscErrorCode BSSCR_BSSCR_PCApply_ScGtKG_C( PC pc, Vec x, Vec y )
 	
 	
 	if( ctx->BBt_has_cnst_nullspace == PETSC_TRUE ) {
-		BSSCR_VecRemoveConstNullspace( x, PETSC_NULL );
+		BSSCR_VecRemoveConstNullspace( x, PETSC_NULLPTR );
 	}
 	PetscGetTime(&t0);
 	KSPSolve( ksp, x, t ); /* t <- GtG_inv x */
@@ -398,7 +398,7 @@ PetscErrorCode BSSCR_BSSCR_PCApply_ScGtKG_C( PC pc, Vec x, Vec y )
 	
 	
 	if( ctx->BBt_has_cnst_nullspace == PETSC_TRUE ) {
-		BSSCR_VecRemoveConstNullspace( s, PETSC_NULL );
+		BSSCR_VecRemoveConstNullspace( s, PETSC_NULLPTR );
 	}
 	PetscGetTime(&t0);
 	KSPSolve( ksp, s, y ); /* y <- GtG_inv s */
@@ -459,7 +459,7 @@ PetscErrorCode BSSCR_PCApplyTranspose_ScGtKG( PC pc, Vec x, Vec y )
 //	VecPointwiseDivide( x, x, ctx->X2 ); /* x <- x/X2 */  /* NEED TO BE SURE */
 	
 	if( ctx->BBt_has_cnst_nullspace == PETSC_TRUE ) {
-		BSSCR_VecRemoveConstNullspace( x, PETSC_NULL );
+		BSSCR_VecRemoveConstNullspace( x, PETSC_NULLPTR );
 	}
 	PetscGetTime(&t0);
 	KSPSolveTranspose( ksp, x, t ); /* t <- GtG_inv x */
@@ -483,7 +483,7 @@ PetscErrorCode BSSCR_PCApplyTranspose_ScGtKG( PC pc, Vec x, Vec y )
 	MatMultTranspose( Bt, X, t ); /* t <- Gt X */
 	
 	if( ctx->BBt_has_cnst_nullspace == PETSC_TRUE ) {
-		BSSCR_VecRemoveConstNullspace( t, PETSC_NULL );
+		BSSCR_VecRemoveConstNullspace( t, PETSC_NULLPTR );
 	}
 	PetscGetTime(&t0);
 	KSPSolveTranspose( ksp, t, y ); /* y <- GtG_inv t */
@@ -519,8 +519,8 @@ PetscErrorCode BSSCR_PCSetFromOptions_ScGtKG( PC pc )
 	PC_SC_GtKG ctx = (PC_SC_GtKG)pc->data;
 	PetscTruth ivalue, flg;
 	
-	if(ctx->ksp_BBt!=PETSC_NULL) {
-		PetscOptionsGetTruth( PETSC_NULL, "-pc_gtkg_monitor", &ivalue, &flg );
+	if(ctx->ksp_BBt!=PETSC_NULLPTR) {
+		PetscOptionsGetTruth( PETSC_NULLPTR, "-pc_gtkg_monitor", &ivalue, &flg );
 		BSSCR_PCScGtKGSetSubKSPMonitor( pc, ivalue );
 		
 	}
@@ -542,21 +542,21 @@ PetscErrorCode BSSCR_PCCreate_ScGtKG( PC pc )
 	ierr = Stg_PetscNew( _PC_SC_GtKG,&pc_data);CHKERRQ(ierr);
 	
 	/* init ctx */
-	pc_data->F   = PETSC_NULL;
-	pc_data->Bt  = PETSC_NULL;
-	pc_data->B   = PETSC_NULL;
+	pc_data->F   = PETSC_NULLPTR;
+	pc_data->Bt  = PETSC_NULLPTR;
+	pc_data->B   = PETSC_NULLPTR;
 	pc_data->BBt_has_cnst_nullspace = PETSC_FALSE;
-	pc_data->ksp_BBt   = PETSC_NULL;
+	pc_data->ksp_BBt   = PETSC_NULLPTR;
 	pc_data->monitor_activated = PETSC_FALSE;
 	
-	pc_data->X1 = PETSC_NULL;
-	pc_data->X2 = PETSC_NULL;
-	pc_data->Y1 = PETSC_NULL;
-	pc_data->Y2 = PETSC_NULL;
+	pc_data->X1 = PETSC_NULLPTR;
+	pc_data->X2 = PETSC_NULLPTR;
+	pc_data->Y1 = PETSC_NULLPTR;
+	pc_data->Y2 = PETSC_NULLPTR;
 	
-	pc_data->s = PETSC_NULL;
-	pc_data->t = PETSC_NULL;
-	pc_data->X = PETSC_NULL;
+	pc_data->s = PETSC_NULLPTR;
+	pc_data->t = PETSC_NULLPTR;
+	pc_data->X = PETSC_NULLPTR;
 	
 	
 	
@@ -585,11 +585,11 @@ PetscErrorCode BSSCR_PCScGtKGGetScalings( PC pc, Vec *X1, Vec *X2, Vec *Y1, Vec 
 	
 	BSSCR_BSSCR_pc_error_ScGtKG( pc, __func__ );
 	
-	if( X1 != PETSC_NULL ) {  *X1 = ctx->X1;  }
-	if( X2 != PETSC_NULL ) {  *X2 = ctx->X2;  }
+	if( X1 != PETSC_NULLPTR ) {  *X1 = ctx->X1;  }
+	if( X2 != PETSC_NULLPTR ) {  *X2 = ctx->X2;  }
 	
-	if( Y1 != PETSC_NULL ) {  *Y1 = ctx->Y1;  }
-	if( Y2 != PETSC_NULL ) {  *Y2 = ctx->Y2;  }
+	if( Y1 != PETSC_NULLPTR ) {  *Y1 = ctx->Y1;  }
+	if( Y2 != PETSC_NULLPTR ) {  *Y2 = ctx->Y2;  }
 	
 	
 	PetscFunctionReturn(0);
@@ -597,9 +597,9 @@ PetscErrorCode BSSCR_PCScGtKGGetScalings( PC pc, Vec *X1, Vec *X2, Vec *Y1, Vec 
 
 
 /*
-F & Bt must different to PETSC_NULL
-B may be PETSC_NULL
-C can be PETSC_NULL
+F & Bt must different to PETSC_NULLPTR
+B may be PETSC_NULLPTR
+C can be PETSC_NULLPTR
 */
 PetscErrorCode BSSCR_PCScGtKGSetOperators( PC pc, Mat F, Mat Bt, Mat B, Mat C )
 {
@@ -612,23 +612,23 @@ PetscErrorCode BSSCR_PCScGtKGSetOperators( PC pc, Mat F, Mat Bt, Mat B, Mat C )
 	ctx->B  = B;
 	ctx->C  = C;
 	
-	if( C != PETSC_NULL ) {
+	if( C != PETSC_NULLPTR ) {
 		pc->ops->apply          = BSSCR_BSSCR_PCApply_ScGtKG_C;
-		pc->ops->applytranspose = PETSC_NULL;
+		pc->ops->applytranspose = PETSC_NULLPTR;
 	}
 	
 	/* Create vectors */
-	if( ctx->s == PETSC_NULL ) {  MatGetVecs( ctx->F, &ctx->s, PETSC_NULL );  }
-	if( ctx->X == PETSC_NULL ) {  MatGetVecs( ctx->F, PETSC_NULL, &ctx->X );  }
-	if( ctx->t == PETSC_NULL ) {  MatGetVecs( ctx->Bt, &ctx->t, PETSC_NULL ); }
+	if( ctx->s == PETSC_NULLPTR ) {  MatGetVecs( ctx->F, &ctx->s, PETSC_NULLPTR );  }
+	if( ctx->X == PETSC_NULLPTR ) {  MatGetVecs( ctx->F, PETSC_NULLPTR, &ctx->X );  }
+	if( ctx->t == PETSC_NULLPTR ) {  MatGetVecs( ctx->Bt, &ctx->t, PETSC_NULLPTR ); }
 	
-	if( ctx->F == PETSC_NULL ) {   Stg_SETERRQ( PETSC_ERR_SUP, "gtkg: F not set" );   }
-	if( ctx->Bt == PETSC_NULL ) {  Stg_SETERRQ( PETSC_ERR_SUP, "gtkg: Bt not set" );  }
+	if( ctx->F == PETSC_NULLPTR ) {   Stg_SETERRQ( PETSC_ERR_SUP, "gtkg: F not set" );   }
+	if( ctx->Bt == PETSC_NULLPTR ) {  Stg_SETERRQ( PETSC_ERR_SUP, "gtkg: Bt not set" );  }
 	
-	if( ctx->X1 == PETSC_NULL ) {  MatGetVecs( ctx->F, &ctx->X1, PETSC_NULL );  }
-	if( ctx->Y1 == PETSC_NULL ) {  MatGetVecs( ctx->F, &ctx->Y1, PETSC_NULL );  }
-	if( ctx->X2 == PETSC_NULL ) {  MatGetVecs( ctx->Bt, &ctx->X2, PETSC_NULL ); }
-	if( ctx->Y2 == PETSC_NULL ) {  MatGetVecs( ctx->Bt, &ctx->Y2, PETSC_NULL ); }
+	if( ctx->X1 == PETSC_NULLPTR ) {  MatGetVecs( ctx->F, &ctx->X1, PETSC_NULLPTR );  }
+	if( ctx->Y1 == PETSC_NULLPTR ) {  MatGetVecs( ctx->F, &ctx->Y1, PETSC_NULLPTR );  }
+	if( ctx->X2 == PETSC_NULLPTR ) {  MatGetVecs( ctx->Bt, &ctx->X2, PETSC_NULLPTR ); }
+	if( ctx->Y2 == PETSC_NULLPTR ) {  MatGetVecs( ctx->Bt, &ctx->Y2, PETSC_NULLPTR ); }
 	
 	VecSet( ctx->X1, 1.0 );
 	VecSet( ctx->Y1, 1.0 );
@@ -648,7 +648,7 @@ PetscErrorCode BSSCR_PCScGtKGAttachNullSpace( PC pc )
 	BSSCR_BSSCR_pc_error_ScGtKG( pc, __func__ );
 	
 	/* Attach a null space */
-	MatNullSpaceCreate( PETSC_COMM_WORLD, PETSC_TRUE, PETSC_NULL, PETSC_NULL, &nsp );
+	MatNullSpaceCreate( PETSC_COMM_WORLD, PETSC_TRUE, PETSC_NULLPTR, PETSC_NULLPTR, &nsp );
 #if ( (PETSC_VERSION_MAJOR >= 3) && (PETSC_VERSION_MINOR <6) )
 	KSPSetNullSpace( ctx->ksp_BBt, nsp );
 #else
@@ -673,7 +673,7 @@ PetscErrorCode BSSCR_PCScGtKGGetKSP( PC pc, KSP *ksp )
 	BSSCR_BSSCR_pc_error_ScGtKG( pc, __func__ );
 	
 	
-	if( ksp != PETSC_NULL ) {
+	if( ksp != PETSC_NULLPTR ) {
 		(*ksp) = ctx->ksp_BBt;
 	}
 	
@@ -687,7 +687,7 @@ PetscErrorCode BSSCR_PCScGtKGSetKSP( PC pc, KSP ksp )
 	BSSCR_BSSCR_pc_error_ScGtKG( pc, __func__ );
 	
 	
-	if( ctx->ksp_BBt != PETSC_NULL ) {
+	if( ctx->ksp_BBt != PETSC_NULLPTR ) {
 		Stg_KSPDestroy(&ctx->ksp_BBt);
 	}
 	
@@ -741,7 +741,7 @@ PetscErrorCode BSSCR_PCScGtKGUseStandardScaling( PC pc )
 	VecDuplicate( rA, &rG );
 	
 	/* Get magnitude of K */  
-	MatGetRowMax( K, rA, PETSC_NULL );
+	MatGetRowMax( K, rA, PETSC_NULLPTR );
 	
 	VecSqrt( rA );  
 	VecReciprocal( rA );
@@ -752,7 +752,7 @@ PetscErrorCode BSSCR_PCScGtKGUseStandardScaling( PC pc )
 	
 	
 	/* Get magnitude of G */
-	MatGetRowMax( G, rG, PETSC_NULL );
+	MatGetRowMax( G, rG, PETSC_NULLPTR );
 	
 	VecDot( rG, rG, &rg2 );
 	VecGetSize( rG, &N );
@@ -797,7 +797,7 @@ PetscErrorCode BSSCR_PCScGtKGUseStandardBBtOperator( PC pc )
 	MatGetSize( ctx->Bt, &M, &N );
 	MatGetLocalSize( ctx->Bt, &m, &n );
 	
-	MatGetVecs( ctx->Bt, PETSC_NULL, &diag );
+	MatGetVecs( ctx->Bt, PETSC_NULLPTR, &diag );
 	
 	/* Define diagonal matrix Y1 X1 */
 	VecPointwiseMult( diag, ctx->Y1, ctx->X1 );
@@ -829,7 +829,7 @@ PetscErrorCode BSSCR_PCScGtKGUseStandardBBtOperator( PC pc )
 	
 	
 	C = ctx->C;
-	if( C !=PETSC_NULL ) {
+	if( C !=PETSC_NULLPTR ) {
 		MatAXPY( BBt, -1.0, C, DIFFERENT_NONZERO_PATTERN );
 	}
 	
@@ -850,7 +850,7 @@ PetscErrorCode BSSCR_PCScGtKGUseStandardBBtOperator( PC pc )
 		BSSCR_PCScGtKGAttachNullSpace( pc );
 	}
 	
-	PetscOptionsGetTruth( PETSC_NULL, "-pc_gtkg_monitor", &ivalue, &flg );
+	PetscOptionsGetTruth( PETSC_NULLPTR, "-pc_gtkg_monitor", &ivalue, &flg );
 	BSSCR_PCScGtKGSetSubKSPMonitor( pc, ivalue );
 	
 	Stg_KSPDestroy(&ksp);

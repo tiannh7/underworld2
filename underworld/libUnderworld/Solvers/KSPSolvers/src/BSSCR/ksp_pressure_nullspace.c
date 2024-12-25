@@ -46,8 +46,8 @@ PetscErrorCode KSPBuildPressure_CB_Nullspace_BSSCR(KSP ksp)
     ierr=Stg_PCGetOperators(ksp->pc,&Amat,&Pmat,&pflag);CHKERRQ(ierr);
     MatNestGetSubMat( Amat, 0,1, &G );/* G should always exist */
     /* now create Vecs t and v to match size of G: i.e. pressure */ /* NOTE: not using "h" vector from ksp->vec_rhs because this part of the block vector doesn't always exist */
-    MatGetVecs( G, &t, PETSC_NULL );/* t and v are destroyed in KSPDestroy_BSSCR */
-    MatGetVecs( G, &v, PETSC_NULL );/* t and v such that can do G*t */
+    MatGetVecs( G, &t, PETSC_NULLPTR );/* t and v are destroyed in KSPDestroy_BSSCR */
+    MatGetVecs( G, &v, PETSC_NULLPTR );/* t and v such that can do G*t */
 
     numLocalNodes = Mesh_GetLocalSize( feMesh,  MT_VERTEX); /* number of nodes on current proc not counting any shadow nodes */
     for(j=0;j<numLocalNodes;j++){
@@ -105,7 +105,7 @@ PetscErrorCode KSPBuildPressure_Const_Nullspace_BSSCR(KSP ksp)
     ierr=Stg_PCGetOperators(ksp->pc,&Amat,&Pmat,&pflag);CHKERRQ(ierr);
     MatNestGetSubMat( Amat, 0,1, &G );/* G should always exist */
     /* now create Vec t to match size of G: i.e. pressure */ /* NOTE: not using "h" vector from ksp->vec_rhs because this part of the block vector doesn't always exist */
-    MatGetVecs( G, &t, PETSC_NULL );/* t is destroyed in KSPDestroy_BSSCR */
+    MatGetVecs( G, &t, PETSC_NULLPTR );/* t is destroyed in KSPDestroy_BSSCR */
 
     VecSet(t, 1.0);
 
@@ -146,9 +146,9 @@ PetscErrorCode KSPRemovePressureNullspace_BSSCR(KSP ksp, Vec h_hat)
     //MatNestGetSubMat( Amat, 0,1, &G );/* G should always exist */
     MatNestGetSubMat( Amat, 1,0, &D );/* D should always exist */
     /* now create Vec t2 to match left hand size of G: i.e. velocity */
-    MatGetVecs( D, &t2, PETSC_NULL );
+    MatGetVecs( D, &t2, PETSC_NULLPTR );
     MatNorm(D,NORM_INFINITY,&gnorm); /* seems like not a bad estimate of the largest eigenvalue for this matrix */
-    if(t){/* assumes that v and t are initially set to PETSC_NULL (in KSPCreate_BSSCR ) */
+    if(t){/* assumes that v and t are initially set to PETSC_NULLPTR (in KSPCreate_BSSCR ) */
 	MatMultTranspose( D, t, t2);
 	VecNorm(t2, NORM_2, &norm);
 	VecNorm(t, NORM_2, &a);

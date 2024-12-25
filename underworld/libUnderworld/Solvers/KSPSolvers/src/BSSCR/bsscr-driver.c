@@ -82,7 +82,7 @@ PetscErrorCode BSSCR_DRIVER_flex( KSP ksp, Mat stokes_A, Vec stokes_x, Vec stoke
     PetscTruth has_cnst_nullspace;
     PC pc_S, pc_MG, pcInner;
     PetscInt monitor_index,max_it,min_it;
-    Vec nsp_vec = PETSC_NULL;
+    Vec nsp_vec = PETSC_NULLPTR;
 
     PetscReal scr_rtol;
     PetscReal inner_rtol;
@@ -132,7 +132,7 @@ PetscErrorCode BSSCR_DRIVER_flex( KSP ksp, Mat stokes_A, Vec stokes_x, Vec stoke
     //MatCreateSchurFromBlock( stokes_A, 0.0, "MatSchur_A11", &S );
     MatCreateSchurComplement(K,K,G,D,C, &S);
     /* configure inner solver */
-    if (ksp_K!=PETSC_NULL) {
+    if (ksp_K!=PETSC_NULLPTR) {
         MatSchurComplementSetKSP( S, ksp_K );
         MatSchurComplementGetKSP( S, &ksp_inner );
     }
@@ -155,25 +155,25 @@ PetscErrorCode BSSCR_DRIVER_flex( KSP ksp, Mat stokes_A, Vec stokes_x, Vec stoke
     KSPSetFromOptions( ksp_inner );
 
     useNormInfStoppingConditions = PETSC_FALSE;
-    PetscOptionsGetTruth( PETSC_NULL ,"-A11_use_norm_inf_stopping_condition", &useNormInfStoppingConditions, &found );
+    PetscOptionsGetTruth( PETSC_NULLPTR ,"-A11_use_norm_inf_stopping_condition", &useNormInfStoppingConditions, &found );
     if(useNormInfStoppingConditions)
         BSSCR_KSPSetNormInfConvergenceTest( ksp_inner );
 
     useNormInfMonitor = PETSC_FALSE;
-    PetscOptionsGetTruth( PETSC_NULL, "-A11_ksp_norm_inf_monitor", &useNormInfMonitor, &found );
+    PetscOptionsGetTruth( PETSC_NULLPTR, "-A11_ksp_norm_inf_monitor", &useNormInfMonitor, &found );
     if(useNormInfMonitor)
-        KSPMonitorSet( ksp_inner, BSSCR_KSPNormInfMonitor, PETSC_NULL, PETSC_NULL );
+        KSPMonitorSet( ksp_inner, BSSCR_KSPNormInfMonitor, PETSC_NULLPTR, PETSC_NULLPTR );
 
     useNormInfMonitor = PETSC_FALSE;
-    PetscOptionsGetTruth( PETSC_NULL, "-A11_ksp_norm_inf_to_norm_2_monitor", &useNormInfMonitor, &found );
+    PetscOptionsGetTruth( PETSC_NULLPTR, "-A11_ksp_norm_inf_to_norm_2_monitor", &useNormInfMonitor, &found );
     if(useNormInfMonitor)
-        KSPMonitorSet( ksp_inner, BSSCR_KSPNormInfToNorm2Monitor, PETSC_NULL, PETSC_NULL );
+        KSPMonitorSet( ksp_inner, BSSCR_KSPNormInfToNorm2Monitor, PETSC_NULLPTR, PETSC_NULLPTR );
 
     /* create right hand side */
     /* h_hat = G'*inv(K)*f - h */
 
-    MatGetVecs(K,PETSC_NULL,&t);
-    MatGetVecs( S, PETSC_NULL, &h_hat );
+    MatGetVecs(K,PETSC_NULLPTR,&t);
+    MatGetVecs( S, PETSC_NULLPTR, &h_hat );
 
     KSPSetOptionsPrefix( ksp_inner, "A11_" );
     KSPSetFromOptions( ksp_inner );
@@ -206,7 +206,7 @@ PetscErrorCode BSSCR_DRIVER_flex( KSP ksp, Mat stokes_A, Vec stokes_x, Vec stoke
     KSPSetFromOptions(ksp_S);
 
     /* Set specific monitor test */
-    KSPGetTolerances( ksp_S, PETSC_NULL, PETSC_NULL, PETSC_NULL, &max_it );
+    KSPGetTolerances( ksp_S, PETSC_NULLPTR, PETSC_NULLPTR, PETSC_NULLPTR, &max_it );
     //BSSCR_KSPLogSetMonitor( ksp_S, max_it, &monitor_index );
 
     /* Pressure / Velocity Solve */
@@ -215,7 +215,7 @@ PetscErrorCode BSSCR_DRIVER_flex( KSP ksp, Mat stokes_A, Vec stokes_x, Vec stoke
 
     usePreviousGuess = PETSC_FALSE;
     if(been_here)
-        PetscOptionsGetTruth( PETSC_NULL, "-scr_use_previous_guess", &usePreviousGuess, &found );
+        PetscOptionsGetTruth( PETSC_NULLPTR, "-scr_use_previous_guess", &usePreviousGuess, &found );
 
     if(usePreviousGuess) {   /* Note this should actually look at checkpoint information */
         KSPSetInitialGuessNonzero( ksp_S, PETSC_TRUE );
@@ -227,14 +227,14 @@ PetscErrorCode BSSCR_DRIVER_flex( KSP ksp, Mat stokes_A, Vec stokes_x, Vec stoke
     //KSPSetRelativeRhsConvergenceTest( ksp_S );
 
     useNormInfStoppingConditions = PETSC_FALSE;
-    PetscOptionsGetTruth( PETSC_NULL ,"-scr_use_norm_inf_stopping_condition", &useNormInfStoppingConditions, &found );
+    PetscOptionsGetTruth( PETSC_NULLPTR ,"-scr_use_norm_inf_stopping_condition", &useNormInfStoppingConditions, &found );
     if(useNormInfStoppingConditions)
         BSSCR_KSPSetNormInfConvergenceTest(ksp_S);
 
     useNormInfMonitor = PETSC_FALSE;
-    PetscOptionsGetTruth( PETSC_NULL, "-scr_ksp_norm_inf_monitor", &useNormInfMonitor, &found );
+    PetscOptionsGetTruth( PETSC_NULLPTR, "-scr_ksp_norm_inf_monitor", &useNormInfMonitor, &found );
     if(useNormInfMonitor)
-        KSPMonitorSet( ksp_S, BSSCR_KSPNormInfToNorm2Monitor, PETSC_NULL, PETSC_NULL );
+        KSPMonitorSet( ksp_S, BSSCR_KSPNormInfToNorm2Monitor, PETSC_NULLPTR, PETSC_NULLPTR );
 
 
     // PetscPrintf( PETSC_COMM_WORLD, "\t* KSPSolve( ksp_S, h_hat, p )\n");
@@ -260,7 +260,7 @@ PetscErrorCode BSSCR_DRIVER_flex( KSP ksp, Mat stokes_A, Vec stokes_x, Vec stoke
     /* set convergence test to use min_it */
     found = PETSC_FALSE;
     min_it = 0;
-    PetscOptionsGetInt( PETSC_NULL,"-scr_ksp_set_min_it_converge", &min_it, &found);
+    PetscOptionsGetInt( PETSC_NULLPTR,"-scr_ksp_set_min_it_converge", &min_it, &found);
     if(found && min_it > 0){
         BSSCR_KSPSetConvergenceMinIts(ksp_S, min_it, bsscrp_self);
     }
@@ -317,7 +317,7 @@ PetscErrorCode BSSCR_DRIVER_flex( KSP ksp, Mat stokes_A, Vec stokes_x, Vec stoke
        This should be put into a proper KSP  monitor now?
     */
     flg = PETSC_TRUE;
-    PetscOptionsGetTruth( PETSC_NULL, "-scr_ksp_solution_summary", &flg, &found );
+    PetscOptionsGetTruth( PETSC_NULLPTR, "-scr_ksp_solution_summary", &flg, &found );
 
     if(flg) {
 

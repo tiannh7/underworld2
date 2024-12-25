@@ -1,0 +1,11 @@
+numpy>=1.20.3
+mpi4py>=1.2.2
+h5py
+pint
+scipy
+
+[full]
+badlands
+lavavu
+matplotlib
+nbmake

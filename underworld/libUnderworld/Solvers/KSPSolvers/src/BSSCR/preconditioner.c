@@ -41,8 +41,8 @@ PetscErrorCode BSSCR_BSSCR_StokesReadPCSchurMat_binary( MPI_Comm comm, Mat *S )
 	char	op_name[PETSC_MAX_PATH_LEN];
 	PetscTruth flg;
 
-	PetscOptionsGetString( PETSC_NULL,"-stokes_Smat",op_name,PETSC_MAX_PATH_LEN-1,&flg );
-	*S = PETSC_NULL;
+	PetscOptionsGetString( PETSC_NULLPTR,"-stokes_Smat",op_name,PETSC_MAX_PATH_LEN-1,&flg );
+	*S = PETSC_NULLPTR;
 	if (flg) {
 		if (!S)	Stg_SETERRQ(1,"Memory space for Smat is NULL");
 
@@ -59,8 +59,8 @@ PetscErrorCode BSSCR_BSSCR_StokesReadPCSchurMat_ascii( MPI_Comm comm, Mat *S )
 	char	op_name[PETSC_MAX_PATH_LEN];
 	PetscTruth flg;
 
-	PetscOptionsGetString( PETSC_NULL,"-stokes_Smat",op_name,PETSC_MAX_PATH_LEN-1,&flg );
-	*S = PETSC_NULL;
+	PetscOptionsGetString( PETSC_NULLPTR,"-stokes_Smat",op_name,PETSC_MAX_PATH_LEN-1,&flg );
+	*S = PETSC_NULLPTR;
 	if (flg) {
 		if (!S)	Stg_SETERRQ(1,"Memory space for Smat is NULL");
 		Stg_SETERRQ(1,"Currently Disabled");
@@ -77,7 +77,7 @@ PetscErrorCode BSSCR_StokesReadPCSchurMat( MPI_Comm comm, Mat *S )
 	PetscTruth flg;
 
 
-	PetscOptionsGetString( PETSC_NULL,"-stokes_ascii",op_name,PETSC_MAX_PATH_LEN-1,&flg );
+	PetscOptionsGetString( PETSC_NULLPTR,"-stokes_ascii",op_name,PETSC_MAX_PATH_LEN-1,&flg );
 	if (flg==PETSC_TRUE) {
 		BSSCR_BSSCR_StokesReadPCSchurMat_ascii( comm, S );
 	}
@@ -97,7 +97,7 @@ PetscErrorCode BSSCR_StokesCreatePCSchur( Mat K, Mat G, PC pc_S )
 	PetscTruth flg;
 
 
-	PetscOptionsGetString( PETSC_NULL, "-Q22_pc_type", pc_type, PETSC_MAX_PATH_LEN-1, &flg );
+	PetscOptionsGetString( PETSC_NULLPTR, "-Q22_pc_type", pc_type, PETSC_MAX_PATH_LEN-1, &flg );
 	if( !flg ) {
 		Stg_SETERRQ( PETSC_ERR_SUP, "OPTION: -Q22_pc_type must be set" );
 	}
@@ -117,7 +117,7 @@ PetscErrorCode BSSCR_StokesCreatePCSchur( Mat K, Mat G, PC pc_S )
 		PetscPrintf(PETSC_COMM_WORLD,"  Setting schur_pc to \"uw\" \n" );
 
 		PetscObjectGetComm( (PetscObject)pc_S, &comm );
-		S = PETSC_NULL;
+		S = PETSC_NULLPTR;
 		BSSCR_StokesReadPCSchurMat( comm, &S );
 		if (!S) {	Stg_SETERRQ(1,"Must indicate location of file for SchurPC matrix with the stokes_Smat option");	}
 
@@ -143,7 +143,7 @@ PetscErrorCode BSSCR_BSSCR_StokesCreatePCSchur2(
 	PetscTruth flg;
 
 
-	PetscOptionsGetString( PETSC_NULL, "-Q22_pc_type", pc_type, PETSC_MAX_PATH_LEN-1, &flg );
+	PetscOptionsGetString( PETSC_NULLPTR, "-Q22_pc_type", pc_type, PETSC_MAX_PATH_LEN-1, &flg );
 	if( !flg ) {
 	    strcpy(pc_type, "uw");
 	    //Stg_SETERRQ( PETSC_ERR_SUP, "OPTION: -Q22_pc_type must be set" );
@@ -244,7 +244,7 @@ PetscErrorCode BSSCR_FormSchurApproximation1( Mat A11, Mat A12, Mat A21, Mat A22
    Mat Shat, A21_cpy;
    Vec diag;
 
-   MatGetVecs( A11, &diag, PETSC_NULL );
+   MatGetVecs( A11, &diag, PETSC_NULLPTR );
    MatGetDiagonal( A11, diag );
    VecReciprocal( diag );
 
@@ -254,16 +254,16 @@ PetscErrorCode BSSCR_FormSchurApproximation1( Mat A11, Mat A12, Mat A21, Mat A22
 /* #else */
 /*       MatTranspose( A12, MAT_INITIAL_MATRIX, &A21_cpy ); */
 /* #endif */
-/*       MatDiagonalScale(A21_cpy, PETSC_NULL, diag ); */
+/*       MatDiagonalScale(A21_cpy, PETSC_NULLPTR, diag ); */
 /*    } */
 /*    else { */
       MatDuplicate( A21, MAT_COPY_VALUES, &A21_cpy );
-      MatDiagonalScale(A21_cpy, PETSC_NULL, diag );
+      MatDiagonalScale(A21_cpy, PETSC_NULLPTR, diag );
    /* } */
 
    MatMatMult( A21_cpy, A12, MAT_INITIAL_MATRIX, 1.2, &Shat );  /* A21 diag(K)^{-1} A12 */
 
-   if( A22 != PETSC_NULL )
+   if( A22 != PETSC_NULLPTR )
       MatAXPY( Shat, -1.0, A22, DIFFERENT_NONZERO_PATTERN ); /* S <- -C + A21 diag(K)^{-1} A12 */
 
    *(void**)_Shat = (void*)Shat;
@@ -279,7 +279,7 @@ PetscErrorCode BSSCR_FormSchurApproximationDiag( Mat A11, Mat A12, Mat A21, Mat 
    Mat Shat, A21_cpy;
    Vec diag;
 
-   MatGetVecs( A11, &diag, PETSC_NULL );
+   MatGetVecs( A11, &diag, PETSC_NULLPTR );
    MatGetDiagonal( A11, diag );
    VecReciprocal( diag );
 
@@ -289,23 +289,23 @@ PetscErrorCode BSSCR_FormSchurApproximationDiag( Mat A11, Mat A12, Mat A21, Mat 
 /* #else */
 /*       MatTranspose( A12, MAT_INITIAL_MATRIX, &A21_cpy ); */
 /* #endif */
-/*       MatDiagonalScale(A21_cpy, PETSC_NULL, diag ); */
+/*       MatDiagonalScale(A21_cpy, PETSC_NULLPTR, diag ); */
 /*    } */
 /*    else { */
       MatDuplicate( A21, MAT_COPY_VALUES, &A21_cpy );
-      MatDiagonalScale(A21_cpy, PETSC_NULL, diag );
+      MatDiagonalScale(A21_cpy, PETSC_NULLPTR, diag );
    /* } */
 
    MatMatMult( A21_cpy, A12, MAT_INITIAL_MATRIX, 1.2, &Shat );  /* A21 diag(K)^{-1} A12 */
 
-   if( A22 != PETSC_NULL )
+   if( A22 != PETSC_NULLPTR )
       MatAXPY( Shat, -1.0, A22, DIFFERENT_NONZERO_PATTERN ); /* S <- -C + A21 diag(K)^{-1} A12 */
 
 
    Stg_MatDestroy(&A21_cpy);
    Stg_VecDestroy(&diag);
 
-   MatGetVecs( Shat, &diag, PETSC_NULL );
+   MatGetVecs( Shat, &diag, PETSC_NULLPTR );
    MatGetDiagonal( Shat, diag );
 
    MatZeroEntries( Shat );

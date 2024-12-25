@@ -121,7 +121,7 @@ void _AdvDiffMulticorrector_AssignFromXML( void* solver, Stg_ComponentFactory* c
 
    _AdvDiffMulticorrector_Init( self, gamma, multiCorrectorIterations );
 
-   if( self->matrixSolver == PETSC_NULL ) {
+   if( self->matrixSolver == PETSC_NULLPTR ) {
       KSPCreate( MPI_COMM_WORLD, &self->matrixSolver );
    }
 }

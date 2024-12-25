@@ -259,9 +259,9 @@ void _Stokes_SLE_PenaltySolver_Solve( void* solver,void* stokesSLE ) {
     /* Build G CInv GTrans */
 /* 	MatTranspose( gradMat, &GTrans ); */
 /* 	 since CInv is diagonal we can just scale mat entries by the diag vector */
-    MatDiagonalScale( divMat, diagC, PETSC_NULL );  /*  Div = CInve Div */
+    MatDiagonalScale( divMat, diagC, PETSC_NULLPTR );  /*  Div = CInve Div */
     MatMatMult( gradMat, divMat, MAT_INITIAL_MATRIX, PETSC_DEFAULT, &kHat );
-    /*MatDiagonalScale( kHat, penalty, PETSC_NULL );*/
+    /*MatDiagonalScale( kHat, penalty, PETSC_NULLPTR );*/
     MatScale( kHat, -1.0 );
     MatAXPY( kMatrix, 1.0, kHat, SAME_NONZERO_PATTERN );
 
@@ -279,7 +279,7 @@ void _Stokes_SLE_PenaltySolver_Solve( void* solver,void* stokesSLE ) {
     if( sle->dStiffMat == NULL ) {
 
 /* 		 since Div was modified when C is diagonal, re build the transpose */
-        if( GTrans != PETSC_NULL )
+        if( GTrans != PETSC_NULLPTR )
             Stg_MatDestroy(&GTrans );
 
 #if( PETSC_VERSION_MAJOR <= 2 )
@@ -299,11 +299,11 @@ void _Stokes_SLE_PenaltySolver_Solve( void* solver,void* stokesSLE ) {
     MatMult( C_InvMat, hTempVec, pVec );  /* p = CInv hTemp      : p = CInv ( H - Div v ) */
 
     Stg_MatDestroy(&kHat );
-    if( fTempVec != PETSC_NULL ) Stg_VecDestroy(&fTempVec );
-    if( hTempVec != PETSC_NULL ) Stg_VecDestroy(&hTempVec );
-    if( diagC != PETSC_NULL )    Stg_VecDestroy(&diagC );
-    if( ksp_v != PETSC_NULL )   Stg_KSPDestroy(&ksp_v );
-    if( GTrans != PETSC_NULL )   Stg_MatDestroy(&GTrans );
+    if( fTempVec != PETSC_NULLPTR ) Stg_VecDestroy(&fTempVec );
+    if( hTempVec != PETSC_NULLPTR ) Stg_VecDestroy(&hTempVec );
+    if( diagC != PETSC_NULLPTR )    Stg_VecDestroy(&diagC );
+    if( ksp_v != PETSC_NULLPTR )   Stg_KSPDestroy(&ksp_v );
+    if( GTrans != PETSC_NULLPTR )   Stg_MatDestroy(&GTrans );
 }
 
 

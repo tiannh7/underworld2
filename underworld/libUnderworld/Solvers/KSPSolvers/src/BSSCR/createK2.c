@@ -40,7 +40,7 @@ PetscErrorCode bsscr_buildK2(KSP ksp){
     G = stokesSLE->gStiffMat->matrix;
     if(bsscr->K2){
 	Stg_MatDestroy(&bsscr->K2);
-	bsscr->K2 =  PETSC_NULL;
+	bsscr->K2 =  PETSC_NULLPTR;
     }
     switch (bsscr->k2type) {
     case (K2_DGMGD):
@@ -57,18 +57,18 @@ PetscErrorCode bsscr_buildK2(KSP ksp){
 
          MatMatMult(K, G, MAT_INITIAL_MATRIX, PETSC_DEFAULT , &KG);
          MatTransposeMatMult(G, KG, MAT_INITIAL_MATRIX, PETSC_DEFAULT ,&GKG);
-         MatGetVecs( GKG, PETSC_NULL, &MD );
+         MatGetVecs( GKG, PETSC_NULLPTR, &MD );
          MatGetDiagonal( GKG, MD );
 
 	      M = Solver->mStiffMat->matrix;
           MatDuplicate(M, MAT_COPY_VALUES, &Mscale );
           MatDiagonalScale(Mscale, NULL, MD );
 
-          VecMin(MD, PETSC_NULL, &minD);
-          VecMax(MD, PETSC_NULL, &maxD);
+          VecMin(MD, PETSC_NULLPTR, &minD);
+          VecMax(MD, PETSC_NULLPTR, &maxD);
           VecScale(MD, 1.0/maxD);
-          VecMin(MD, PETSC_NULL, &minD);
-          VecMax(MD, PETSC_NULL, &maxD);
+          VecMin(MD, PETSC_NULLPTR, &minD);
+          VecMax(MD, PETSC_NULLPTR, &maxD);
 
 	      bsscr_GMiGt(&K2,K,G,Mscale);      /* K2 created */
 
@@ -142,11 +142,11 @@ PetscErrorCode bsscr_DGMiGtD( Mat *_K2, Mat K, Mat G, Mat M){
     PetscErrorCode ierr;
 
     PetscFunctionBegin;
-    MatGetVecs( K, &diag, PETSC_NULL );
+    MatGetVecs( K, &diag, PETSC_NULLPTR );
     MatGetDiagonal( K, diag );
     VecSqrt(diag);
     //VecReciprocal(diag);/* trying something different here */
-    MatGetVecs( M, &Mdiag, PETSC_NULL );
+    MatGetVecs( M, &Mdiag, PETSC_NULLPTR );
     MatGetDiagonal( M, Mdiag );
     VecReciprocal(Mdiag);
     #if( PETSC_VERSION_MAJOR <= 2 )
@@ -155,7 +155,7 @@ PetscErrorCode bsscr_DGMiGtD( Mat *_K2, Mat K, Mat G, Mat M){
     ierr=MatTranspose(G, MAT_INITIAL_MATRIX,&Gtrans);CHKERRQ(ierr);
     #endif
     ierr=MatConvert(Gtrans, MATSAME, MAT_INITIAL_MATRIX, &MinvGt);CHKERRQ(ierr);/* copy Gtrans -> MinvGt */
-    MatDiagonalScale(MinvGt, Mdiag, PETSC_NULL);/* Minv*Gtrans */
+    MatDiagonalScale(MinvGt, Mdiag, PETSC_NULLPTR);/* Minv*Gtrans */
     /* MAT_INITIAL_MATRIX -> creates K2 matrix : PETSC_DEFAULT for fill ratio: run with -info to find what it should be*/
     ierr=MatMatMult( G, MinvGt, MAT_INITIAL_MATRIX, PETSC_DEFAULT, &K2);CHKERRQ(ierr);/* K2 = G*Minv*Gtrans */
     MatDiagonalScale(K2, diag, diag );/* K2 = D*K2*D  = D*G*Minv*Gtrans*D */
@@ -179,7 +179,7 @@ PetscErrorCode bsscr_GMiGt( Mat *_K2, Mat K, Mat G, Mat M){
     PetscErrorCode ierr;
 
     PetscFunctionBegin;
-    MatGetVecs( M, &Mdiag, PETSC_NULL );
+    MatGetVecs( M, &Mdiag, PETSC_NULLPTR );
     MatGetDiagonal( M, Mdiag );
     VecReciprocal(Mdiag);
     #if( PETSC_VERSION_MAJOR <= 2 )
@@ -188,7 +188,7 @@ PetscErrorCode bsscr_GMiGt( Mat *_K2, Mat K, Mat G, Mat M){
     ierr=MatTranspose(G, MAT_INITIAL_MATRIX,&Gtrans);CHKERRQ(ierr);
     #endif
     ierr=MatConvert(Gtrans, MATSAME, MAT_INITIAL_MATRIX, &MinvGt);CHKERRQ(ierr);/* copy Gtrans -> MinvGt */
-    MatDiagonalScale(MinvGt, Mdiag, PETSC_NULL);/* Minv*Gtrans */
+    MatDiagonalScale(MinvGt, Mdiag, PETSC_NULLPTR);/* Minv*Gtrans */
     /* MAT_INITIAL_MATRIX -> creates K2 matrix : PETSC_DEFAULT for fill ratio: run with -info to find what it should be*/
     ierr=MatMatMult( G, MinvGt, MAT_INITIAL_MATRIX, PETSC_DEFAULT, &K2);CHKERRQ(ierr);/* K2 = G*Minv*Gtrans */
     Stg_MatDestroy(&Gtrans);

@@ -97,15 +97,15 @@ void _PETScMGSolver_Init( PETScMGSolver* self ) {
 	/* from the depreciated MatrixSolver_Init func */
 	self->mgData->comm = MPI_COMM_WORLD;
 	KSPCreate( MPI_COMM_WORLD, &self->mgData->ksp );
-	self->mgData->matrix = PETSC_NULL;
-	self->mgData->inversion = PETSC_NULL;
-	self->mgData->residual = PETSC_NULL;
+	self->mgData->matrix = PETSC_NULLPTR;
+	self->mgData->inversion = PETSC_NULLPTR;
+	self->mgData->residual = PETSC_NULLPTR;
 	self->mgData->expiredResidual = True;
 	self->mgData->matrixChanged = True;
         self->mgData->optionsReady = False;
 
-	self->mgData->curRHS = PETSC_NULL;
-	self->mgData->curSolution = PETSC_NULL;
+	self->mgData->curRHS = PETSC_NULLPTR;
+	self->mgData->curSolution = PETSC_NULLPTR;
 	/* end of MatrixSolver_Init stuff */
 
 	self->nLevels = 0;
@@ -337,12 +337,12 @@ void PETScMGSolver_SetRestriction( void* matrixSolver, unsigned levelInd, void* 
 	if( level->R != R )
 		self->opsChanged = True;
 
-    if(level->P == level->R) equal=1;/* need to test for equality first as petsc will set mat to PETSC_NULL on destroy */
+    if(level->P == level->R) equal=1;/* need to test for equality first as petsc will set mat to PETSC_NULLPTR on destroy */
 
-	if( level->R != PETSC_NULL ){
+	if( level->R != PETSC_NULLPTR ){
 		Stg_MatDestroy(&level->R );
 		if(equal)
-		    level->P = PETSC_NULL;
+		    level->P = PETSC_NULLPTR;
     }
 	level->R = R;
 }
@@ -361,12 +361,12 @@ void PETScMGSolver_SetProlongation( void* matrixSolver, unsigned levelInd, void*
 	if( level->P != P )
 		self->opsChanged = True;
 
-    if(level->P == level->R) equal=1;/* need to test for equality first as petsc will set mat to PETSC_NULL on destroy */
+    if(level->P == level->R) equal=1;/* need to test for equality first as petsc will set mat to PETSC_NULLPTR on destroy */
 
-	if( level->P != PETSC_NULL ) {
+	if( level->P != PETSC_NULLPTR ) {
 		Stg_MatDestroy(&level->P );
 		if(equal)
-		    level->R = PETSC_NULL;
+		    level->R = PETSC_NULLPTR;
 	}
 	level->P = P;
 }
@@ -548,7 +548,7 @@ void PETScMGSolver_UpdateWorkVectors( PETScMGSolver* self ) {
 		level = self->levels + l_i;
 
 		//Matrix_GetLocalSize( level->A, &size, NULL );
-		MatGetLocalSize( level->A, &size, PETSC_NULL );
+		MatGetLocalSize( level->A, &size, PETSC_NULLPTR );
 
                 if( level->workRes )
                     VecGetLocalSize( level->workRes, &vecSize );
@@ -634,12 +634,12 @@ void PETScMGSolver_UpdateSolvers( PETScMGSolver* self ) {
 	ec = KSPGetPC( self->mgData->ksp, &pc );
 	CheckPETScError( ec );
 
-	ec = PCMGSetLevels( pc, self->nLevels, PETSC_NULL );
+	ec = PCMGSetLevels( pc, self->nLevels, PETSC_NULLPTR );
 	CheckPETScError( ec );
 	ec = PCMGSetType( pc, PC_MG_MULTIPLICATIVE );
 	CheckPETScError( ec );
 
-	ec=PetscOptionsGetTruth( PETSC_NULL, "-pc_mg_different_smoothers", &smoothers_differ, &flag ); CheckPETScError(ec);
+	ec=PetscOptionsGetTruth( PETSC_NULLPTR, "-pc_mg_different_smoothers", &smoothers_differ, &flag ); CheckPETScError(ec);
 
 	ec=PetscObjectGetComm( (PetscObject)pc, &comm ); CheckPETScError(ec);
 	MPI_Comm_size( comm, &size );
@@ -711,13 +711,13 @@ void PETScMGSolver_DestructLevels( PETScMGSolver* self ) {
 		PETScMGSolver_Level*	level = self->levels + l_i;
 
         if(level->R == level->P){
-          if( level->R != PETSC_NULL ){
+          if( level->R != PETSC_NULLPTR ){
             Stg_MatDestroy(&level->R );
-            level->P =  PETSC_NULL;
+            level->P =  PETSC_NULLPTR;
           }
         }else{/* not same so test individually */
-          if( level->R != PETSC_NULL ) Stg_MatDestroy(&level->R );
-          if( level->P != PETSC_NULL ) Stg_MatDestroy(&level->P );
+          if( level->R != PETSC_NULLPTR ) Stg_MatDestroy(&level->R );
+          if( level->P != PETSC_NULLPTR ) Stg_MatDestroy(&level->P );
         }
 
         if( level->workRes )

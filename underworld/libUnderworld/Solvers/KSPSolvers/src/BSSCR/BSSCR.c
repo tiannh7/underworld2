@@ -180,7 +180,7 @@ PetscErrorCode  KSPSolve_BSSCR(KSP ksp)
 
     PetscPrintf( PETSC_COMM_WORLD, "\nBSSCR -- Block Stokes Schur Compliment Reduction Solver \n");
     /** Get the stokes Block matrix and its preconditioner matrix */
-    ierr = Stg_PCGetOperators(ksp->pc,&Amat,&Pmat,PETSC_NULL);CHKERRQ(ierr);
+    ierr = Stg_PCGetOperators(ksp->pc,&Amat,&Pmat,PETSC_NULLPTR);CHKERRQ(ierr);
 
     /** In Petsc proper, KSP's ksp->data is usually set in KSPCreate_XXX function.
         Here it is set in the _StokesBlockKSPInterface_Solve function instead so that we can ensure that the solver
@@ -198,7 +198,7 @@ PetscErrorCode  KSPSolve_BSSCR(KSP ksp)
     }
 
     if( (bsscr->k2type != 0) ){
-      if(bsscr->buildK2 != PETSC_NULL) {
+      if(bsscr->buildK2 != PETSC_NULLPTR) {
             (*bsscr->buildK2)(ksp); /* building K2 from scaled version of stokes operators: K2 lives on bsscr struct = ksp->data */
         }
     }
@@ -206,7 +206,7 @@ PetscErrorCode  KSPSolve_BSSCR(KSP ksp)
     /* get sub matrix / vector objects */
     MatNestGetSubMat( Amat, 0,0, &K );
     /* Underworld preconditioner matrix*/
-    ApproxS = PETSC_NULL;
+    ApproxS = PETSC_NULLPTR;
     if( ((StokesBlockKSPInterface*)SLE->solver)->preconditioner ) { /* SLE->solver->st_sle == SLE here, by the way */
         StiffnessMatrix *preconditioner;
         preconditioner = ((StokesBlockKSPInterface*)SLE->solver)->preconditioner;
@@ -223,7 +223,7 @@ PetscErrorCode  KSPSolve_BSSCR(KSP ksp)
     
     flg = PETSC_FALSE;
     augment = PETSC_TRUE;
-    PetscOptionsGetTruth(PETSC_NULL, "-augmented_lagrangian", &augment, &flg);
+    PetscOptionsGetTruth(PETSC_NULLPTR, "-augmented_lagrangian", &augment, &flg);
     BSSCR_DRIVER_auglag( ksp, Amat, X, B, ApproxS, BA, sym, bsscr );
 
     /**********************************************************/
@@ -231,12 +231,12 @@ PetscErrorCode  KSPSolve_BSSCR(KSP ksp)
     /**********************************************************/
     if( bsscr->do_scaling ){
         (*bsscr->unscale)(ksp);  }
-    if( (bsscr->k2type != 0) && bsscr->K2 != PETSC_NULL ){
+    if( (bsscr->k2type != 0) && bsscr->K2 != PETSC_NULLPTR ){
         if(bsscr->k2type != K2_SLE){/* don't destroy here, as in this case, K2 is just pointing to an existing matrix on the SLE */
             Stg_MatDestroy(&bsscr->K2 );
         }
         bsscr->K2built = PETSC_FALSE;
-        bsscr->K2 = PETSC_NULL;  }
+        bsscr->K2 = PETSC_NULLPTR;  }
 
     ksp->reason = KSP_CONVERGED_RTOL;
 
@@ -283,7 +283,7 @@ PetscErrorCode KSPSetFromOptions_BSSCR(KSP ksp)
   
     ierr = PetscOptionsHead("KSP BSSCR options");CHKERRQ(ierr);
     /* if this ksp has a prefix "XXX_" it will be automatically added to the options. e.g. -ksp_test -> -XXX_ksp_test */
-    /* ierr = PetscOptionsTruth("-ksp_test","Test KSP flag","nil",PETSC_FALSE,&test,PETSC_NULL);CHKERRQ(ierr); */
+    /* ierr = PetscOptionsTruth("-ksp_test","Test KSP flag","nil",PETSC_FALSE,&test,PETSC_NULLPTR);CHKERRQ(ierr); */
     /* if(test){ PetscPrintf( PETSC_COMM_WORLD,  "\n\n-----  test flag set  ------\n\n"); } */
     PetscOptionsEnum("-ksp_k2_type","Augmented Lagrangian matrix type","",K2Types, bsscr->k2type,(PetscEnum*)&bsscr->k2type,&flg);
     //if(flg){  PetscPrintf( PETSC_COMM_WORLD,  "-----  k2 type is  ------\n"); }
@@ -298,7 +298,7 @@ PetscErrorCode KSPSetFromOptions_BSSCR(KSP ksp, Stg_PetscOptions *PetscOptionsOb
 
     PetscOptionsHead(PetscOptionsObject,"KSP BSSCR options");
     /* if this ksp has a prefix "XXX_" it will be automatically added to the options. e.g. -ksp_test -> -XXX_ksp_test */
-    /* ierr = PetscOptionsTruth("-ksp_test","Test KSP flag","nil",PETSC_FALSE,&test,PETSC_NULL);CHKERRQ(ierr); */
+    /* ierr = PetscOptionsTruth("-ksp_test","Test KSP flag","nil",PETSC_FALSE,&test,PETSC_NULLPTR);CHKERRQ(ierr); */
     /* if(test){ PetscPrintf( PETSC_COMM_WORLD,  "\n\n-----  test flag set  ------\n\n"); } */
     PetscOptionsEnum("-ksp_k2_type","Augmented Lagrangian matrix type","",K2Types, (PetscEnum)bsscr->k2type,(PetscEnum*)&bsscr->k2type,&flg);
     //if(flg){  PetscPrintf( PETSC_COMM_WORLD,  "-----  k2 type is  ------\n"); }
@@ -328,23 +328,23 @@ PetscErrorCode KSPSetUp_BSSCR(KSP ksp)
     BSSCR_PetscExtStokesSolversInitialize();
 
     K = stokesSLE->kStiffMat->matrix;
-    bsscr->K2=PETSC_NULL;
+    bsscr->K2=PETSC_NULLPTR;
 
     BSSCR_MatStokesBlockScalingCreate( &(bsscr->BA) );/* allocate memory for scaling struct */
     found = PETSC_FALSE;
     augment = PETSC_TRUE;
-    PetscOptionsGetTruth(PETSC_NULL, "-augmented_lagrangian", &augment, &found);
+    PetscOptionsGetTruth(PETSC_NULLPTR, "-augmented_lagrangian", &augment, &found);
     if(augment){
         bsscr->buildK2 = bsscr_buildK2; }
     else {
-        bsscr->buildK2 = PETSC_NULL; }
+        bsscr->buildK2 = PETSC_NULLPTR; }
 
     /***************************************************************************************************************/
     /** Do scaling *************************************************************************************************/
     /***************************************************************************************************************/
     found = PETSC_FALSE;
     scale = PETSC_FALSE;/* scaling off by default */
-    PetscOptionsGetTruth(PETSC_NULL, "-rescale_equations", &scale, &found);
+    PetscOptionsGetTruth(PETSC_NULLPTR, "-rescale_equations", &scale, &found);
     Stg_PetscObjectTypeCompare((PetscObject)K, "mataijmumps", &ismumps);/** older versions of petsc have this */
     if(ismumps && scale){
         PetscPrintf( PETSC_COMM_WORLD, "\t* Not applying scaling to matrices as MatGetRowMax operation not defined for MATAIJMUMPS matrix type \n");
@@ -357,7 +357,7 @@ PetscErrorCode KSPSetUp_BSSCR(KSP ksp)
         bsscr->scaletype   = KONLY;
         konly = PETSC_TRUE;
         found = PETSC_FALSE;
-        PetscOptionsGetTruth(PETSC_NULL, "-k_scale_only", &konly, &found);
+        PetscOptionsGetTruth(PETSC_NULLPTR, "-k_scale_only", &konly, &found);
         if(!konly){ bsscr->scaletype = DEFAULT; }
     }
 
@@ -366,7 +366,7 @@ PetscErrorCode KSPSetUp_BSSCR(KSP ksp)
     /***************************************************************************************************************/
     found = PETSC_FALSE;
     checkerp = PETSC_FALSE;
-    PetscOptionsGetTruth(PETSC_NULL, "-remove_checkerboard_pressure_null_space", &checkerp, &found );
+    PetscOptionsGetTruth(PETSC_NULLPTR, "-remove_checkerboard_pressure_null_space", &checkerp, &found );
     if(checkerp){
         bsscr->check_cb_pressureNS    = PETSC_TRUE;
         bsscr->check_pressureNS       = PETSC_TRUE;
@@ -374,7 +374,7 @@ PetscErrorCode KSPSetUp_BSSCR(KSP ksp)
     }
     found = PETSC_FALSE;
     conp = PETSC_FALSE;
-    PetscOptionsGetTruth(PETSC_NULL, "-remove_constant_pressure_null_space", &conp, &found );
+    PetscOptionsGetTruth(PETSC_NULLPTR, "-remove_constant_pressure_null_space", &conp, &found );
     if(conp){
         bsscr->check_const_pressureNS = PETSC_TRUE;
         bsscr->check_pressureNS       = PETSC_TRUE;

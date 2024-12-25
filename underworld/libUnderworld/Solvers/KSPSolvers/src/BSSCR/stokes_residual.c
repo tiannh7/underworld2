@@ -54,7 +54,7 @@ double BSSCR_StokesContinuityResidual( Mat G, Mat C, Vec H, Vec u, Vec p )
 	
 	VecDuplicate( H, &pStar );
 	MatMultTranspose( G, u, pStar );                // {pStar} = [G]^T{u}
-	if( C != PETSC_NULL ) {
+	if( C != PETSC_NULLPTR ) {
 		MatMultAdd( C, p, pStar, pStar );	/* {pStar} = {pStar} + [C] {p} */
 	}
 	VecAYPX( pStar, -1.0, H );                              // {pStar} = {H} - {pStar}

@@ -69,11 +69,11 @@ PetscErrorCode BSSCR_MatStokesKBlock_ApplyScaling( MatStokesBlockScaling BA, Mat
 	VecNestGetSubVec( BA->Rz, 0, &R1 );
 	
 	/* get the subblock solution and rhs */
-	if( x != PETSC_NULL ) {
+	if( x != PETSC_NULLPTR ) {
 		VecNestGetSubVec( x, 0, &u );
 		VecPointwiseDivide( u, u,R1); /* x <- x * 1/R1 */
 	}
-	if( b != PETSC_NULL ) {
+	if( b != PETSC_NULLPTR ) {
 		VecNestGetSubVec( b, 0, &f );
 		VecPointwiseMult( f, f,L1); /* f <- f * L1 */
 	}
@@ -83,9 +83,9 @@ PetscErrorCode BSSCR_MatStokesKBlock_ApplyScaling( MatStokesBlockScaling BA, Mat
 	MatNestGetSubMat( A, 0,1, &G );
 	MatNestGetSubMat( A, 1,0, &D );
 	
-	if( K != PETSC_NULL ) {		MatDiagonalScale( K, L1,R1 );		}
-	if( G != PETSC_NULL ) {		MatDiagonalScale( G, L1,PETSC_NULL );		}
-	if( D != PETSC_NULL && !sym ) {	MatDiagonalScale( D, PETSC_NULL,R1 );		}
+	if( K != PETSC_NULLPTR ) {		MatDiagonalScale( K, L1,R1 );		}
+	if( G != PETSC_NULLPTR ) {		MatDiagonalScale( G, L1,PETSC_NULLPTR );		}
+	if( D != PETSC_NULLPTR && !sym ) {	MatDiagonalScale( D, PETSC_NULLPTR,R1 );		}
 	
 	PetscFunctionReturn(0);
 }
@@ -98,8 +98,8 @@ PetscErrorCode BSSCR_MatStokesKBlockScalingCreate( MatStokesBlockScaling *_BA )
 
 	ierr = PetscMalloc( sizeof(struct _p_MatStokesBlockScaling), &BA );CHKERRQ(ierr);
 	
-	BA->Lz = PETSC_NULL;
-	BA->Rz = PETSC_NULL;
+	BA->Lz = PETSC_NULLPTR;
+	BA->Rz = PETSC_NULLPTR;
 	
 	BA->scaling_exists              = PETSC_FALSE;
 	BA->scalings_have_been_inverted = PETSC_FALSE;
@@ -116,14 +116,14 @@ PetscErrorCode BSSCR_MatStokesKBlockScalingDestroy( MatStokesBlockScaling BA )
 	
 	if( BA->scaling_exists == PETSC_FALSE ) PetscFunctionReturn(0); 
 	
-	if( BA->Lz != PETSC_NULL ) {
+	if( BA->Lz != PETSC_NULLPTR ) {
 		Stg_VecDestroy(&BA->Lz );
-		BA->Lz = PETSC_NULL;
+		BA->Lz = PETSC_NULLPTR;
 	}
 	
-	if( BA->Rz != PETSC_NULL ) {
+	if( BA->Rz != PETSC_NULLPTR ) {
 		Stg_VecDestroy(&BA->Rz );
-		BA->Rz = PETSC_NULL;
+		BA->Rz = PETSC_NULLPTR;
 	}
 	
 	PetscFree( BA );
@@ -160,7 +160,7 @@ PetscErrorCode BSSCR_MatKBlock_ConstructScaling( MatStokesBlockScaling BA, Mat A
 		BA->scaling_exists = PETSC_TRUE;
 	}
 	
-//	if( BA->user_build_scaling != PETSC_NULL ) {
+//	if( BA->user_build_scaling != PETSC_NULLPTR ) {
 //		BA->user_build_scaling( A,b,x,BA->scaling_ctx);
 //	}
 //	else {
@@ -258,54 +258,54 @@ PetscErrorCode BSSCR_MatStokesKBlockReportOperatorScales( Mat A, PetscTruth sym 
 	MatNestGetSubMat( A, 1,1, &C );
 	
 	
-	MatGetVecs( K, PETSC_NULL, &rA );
+	MatGetVecs( K, PETSC_NULLPTR, &rA );
 	VecDuplicate( rA, &rG );
 	
 	/* Report the row max and mins */
-	if (K!=PETSC_NULL) {
-		MatGetRowMaxAbs( K, rA, PETSC_NULL );
+	if (K!=PETSC_NULLPTR) {
+		MatGetRowMaxAbs( K, rA, PETSC_NULLPTR );
 		VecMax( rA, &loc, &max );
 		PetscPrintf( PETSC_COMM_WORLD, "Sup_max(K) = %g \n", max );
 		
-		MatGetRowMinAbs( K, rA, PETSC_NULL );
+		MatGetRowMinAbs( K, rA, PETSC_NULLPTR );
 		VecMin( rA, &loc, &min );
 		PetscPrintf( PETSC_COMM_WORLD, "Sup_min(K) = %g \n\n", min );
 	}
 	
-	if( G != PETSC_NULL ) {       
-		MatGetRowMaxAbs( G, rG, PETSC_NULL );
+	if( G != PETSC_NULLPTR ) {       
+		MatGetRowMaxAbs( G, rG, PETSC_NULLPTR );
 		VecMax( rG, &loc, &max );
 		PetscPrintf( PETSC_COMM_WORLD, "Sup_max(G) = %g \n", max );
 		
-		MatGetRowMinAbs( G, rG, PETSC_NULL );
+		MatGetRowMinAbs( G, rG, PETSC_NULLPTR );
 		VecMin( rG, &loc, &min );
 		PetscPrintf( PETSC_COMM_WORLD, "Sup_min(G) = %g \n", min );
 	}
 	
-	if( D != PETSC_NULL && !sym ) {
+	if( D != PETSC_NULLPTR && !sym ) {
                 Vec rD;
 
-                MatGetVecs( D, PETSC_NULL, &rD );
-		MatGetRowMaxAbs( D, rD, PETSC_NULL );
+                MatGetVecs( D, PETSC_NULLPTR, &rD );
+		MatGetRowMaxAbs( D, rD, PETSC_NULLPTR );
 		VecMax( rD, &loc, &max );
 		PetscPrintf( PETSC_COMM_WORLD, "Sup_max(D) = %g \n", max );
 		
-		MatGetRowMinAbs( D, rD, PETSC_NULL );
+		MatGetRowMinAbs( D, rD, PETSC_NULLPTR );
 		VecMin( rD, &loc, &min );
 		PetscPrintf( PETSC_COMM_WORLD, "Sup_min(D) = %g \n", min );
 
                 Stg_VecDestroy(&rD );
 	}
 	
-	if( C != PETSC_NULL ) {
+	if( C != PETSC_NULLPTR ) {
 		Vec cG;
 
-		MatGetVecs( G, &cG, PETSC_NULL );
-		MatGetRowMaxAbs( C, cG, PETSC_NULL );
+		MatGetVecs( G, &cG, PETSC_NULLPTR );
+		MatGetRowMaxAbs( C, cG, PETSC_NULLPTR );
 		VecMax( cG, &loc, &max );
 		PetscPrintf( PETSC_COMM_WORLD, "Sup_max(C) = %g \n", max );
 		
-		MatGetRowMinAbs( C, cG, PETSC_NULL );
+		MatGetRowMinAbs( C, cG, PETSC_NULLPTR );
 		VecMin( cG, &loc, &min );
 		PetscPrintf( PETSC_COMM_WORLD, "Sup_min(C) = %g \n\n", min );
 	

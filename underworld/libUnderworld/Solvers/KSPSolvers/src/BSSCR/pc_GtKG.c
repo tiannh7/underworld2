@@ -135,10 +135,10 @@ PetscErrorCode BSSCR_PCSetUp_GtKG( PC pc )
 	
 	
 	
-	if( ctx->K == PETSC_NULL ) {
+	if( ctx->K == PETSC_NULLPTR ) {
 		Stg_SETERRQ( PETSC_ERR_SUP, "gtkg: K not set" );
 	}
-	if( ctx->G == PETSC_NULL ) {
+	if( ctx->G == PETSC_NULLPTR ) {
 		Stg_SETERRQ( PETSC_ERR_SUP, "gtkg: G not set" );
 	}
 	
@@ -146,36 +146,36 @@ PetscErrorCode BSSCR_PCSetUp_GtKG( PC pc )
 	
 	
 	/* Check for existence of objects and trash any which exist */
-	if( ctx->form_GtG == PETSC_TRUE && ctx->GtG != PETSC_NULL ) {
+	if( ctx->form_GtG == PETSC_TRUE && ctx->GtG != PETSC_NULLPTR ) {
 		Stg_MatDestroy(&ctx->GtG );
-		ctx->GtG = PETSC_NULL;
+		ctx->GtG = PETSC_NULLPTR;
 	}
 	
-	if( ctx->s != PETSC_NULL ) {
+	if( ctx->s != PETSC_NULLPTR ) {
 		Stg_VecDestroy(&ctx->s );
-		ctx->s = PETSC_NULL;
+		ctx->s = PETSC_NULLPTR;
 	}
-	if( ctx->X != PETSC_NULL ) {
+	if( ctx->X != PETSC_NULLPTR ) {
 		Stg_VecDestroy(&ctx->X );
-		ctx->X = PETSC_NULL;
+		ctx->X = PETSC_NULLPTR;
 	}
-	if( ctx->t != PETSC_NULL ) {
+	if( ctx->t != PETSC_NULLPTR ) {
 		Stg_VecDestroy(&ctx->t );
-		ctx->t = PETSC_NULL;
+		ctx->t = PETSC_NULLPTR;
 	}
-	if( ctx->inv_diag_M != PETSC_NULL ) {
+	if( ctx->inv_diag_M != PETSC_NULLPTR ) {
 		Stg_VecDestroy(&ctx->inv_diag_M );
-		ctx->inv_diag_M = PETSC_NULL;
+		ctx->inv_diag_M = PETSC_NULLPTR;
 	}
 	
 	
 	
 	/* Create vectors */
 	MatGetVecs( ctx->K, &ctx->s, &ctx->X );
-	MatGetVecs( ctx->G, &ctx->t, PETSC_NULL );
+	MatGetVecs( ctx->G, &ctx->t, PETSC_NULLPTR );
 	
-	if( ctx->M != PETSC_NULL ) {
-		MatGetVecs( ctx->K, &ctx->inv_diag_M, PETSC_NULL );
+	if( ctx->M != PETSC_NULLPTR ) {
+		MatGetVecs( ctx->K, &ctx->inv_diag_M, PETSC_NULLPTR );
 		MatGetDiagonal( ctx->M, ctx->inv_diag_M );
 		VecReciprocal( ctx->inv_diag_M );
 		
@@ -189,7 +189,7 @@ PetscErrorCode BSSCR_PCSetUp_GtKG( PC pc )
 	MatGetSize( ctx->G, &M, &N );
 	MatGetLocalSize( ctx->G, &m, &n );
 	
-	MatGetVecs( ctx->G, PETSC_NULL, &diag );
+	MatGetVecs( ctx->G, PETSC_NULLPTR, &diag );
 	VecSet( diag, 1.0 );
 	
 	MatCreate( comm, &Ident );
@@ -201,7 +201,7 @@ PetscErrorCode BSSCR_PCSetUp_GtKG( PC pc )
 	MatGetType( ctx->G, &mtype );
 	MatSetType( Ident, mtype );
 	
-	if( ctx->M == PETSC_NULL ) {
+	if( ctx->M == PETSC_NULLPTR ) {
 		MatDiagonalSet( Ident, diag, INSERT_VALUES );
 	}
 	else {
@@ -251,18 +251,18 @@ PetscErrorCode BSSCR_PCDestroy_GtKG( PC pc )
 	PC_GtKG ctx = (PC_GtKG)pc->data;
 	
 	
-	if( ctx == PETSC_NULL ) {	PetscFunctionReturn(0); }
+	if( ctx == PETSC_NULLPTR ) {	PetscFunctionReturn(0); }
 	
-	if( ctx->form_GtG == PETSC_TRUE && ctx->GtG != PETSC_NULL ) {
+	if( ctx->form_GtG == PETSC_TRUE && ctx->GtG != PETSC_NULLPTR ) {
 		Stg_MatDestroy(&ctx->GtG );
 	}
-	if( ctx->ksp != PETSC_NULL ) {	Stg_KSPDestroy(&ctx->ksp );		}
-	if( ctx->s != PETSC_NULL ) {	Stg_VecDestroy(&ctx->s );		}
-	if( ctx->X != PETSC_NULL ) {	Stg_VecDestroy(&ctx->X );		}
-	if( ctx->t != PETSC_NULL ) {	Stg_VecDestroy(&ctx->t );		}
-	if( ctx->inv_diag_M != PETSC_NULL ) {
+	if( ctx->ksp != PETSC_NULLPTR ) {	Stg_KSPDestroy(&ctx->ksp );		}
+	if( ctx->s != PETSC_NULLPTR ) {	Stg_VecDestroy(&ctx->s );		}
+	if( ctx->X != PETSC_NULLPTR ) {	Stg_VecDestroy(&ctx->X );		}
+	if( ctx->t != PETSC_NULLPTR ) {	Stg_VecDestroy(&ctx->t );		}
+	if( ctx->inv_diag_M != PETSC_NULLPTR ) {
 		Stg_VecDestroy(&ctx->inv_diag_M );
-		ctx->inv_diag_M = PETSC_NULL;
+		ctx->inv_diag_M = PETSC_NULLPTR;
 	}
 	
 	PetscFree( ctx );
@@ -276,7 +276,7 @@ PetscErrorCode BSSCR_PCView_GtKG( PC pc, PetscViewer viewer )
 	
 	PetscViewerASCIIPushTab(viewer); //1
 
-	if( ctx->M == PETSC_NULL ) {
+	if( ctx->M == PETSC_NULLPTR ) {
 		PetscViewerASCIIPrintf( viewer, "gtkg: Standard \n" );
 	}else {
 		PetscViewerASCIIPrintf( viewer, "gtkg: Least Squares Commutator \n" );
@@ -357,7 +357,7 @@ PetscErrorCode BSSCRBSSCR_Lp_monitor_check_rhs_consistency( KSP ksp, Vec rhs, Pe
 	if( PetscAbsReal(dot) > 1.0e-8 ) {
 		PetscPrintf(((PetscObject)ksp)->comm,"    (%D) Lp z = r: ******* WARNING ******* RHS is not consistent. {b}.{1} = %5.5e \n", 
 				index, dot );
-		BSSCR_VecRemoveConstNullspace( rhs, PETSC_NULL );
+		BSSCR_VecRemoveConstNullspace( rhs, PETSC_NULLPTR );
 	}
 #endif
 	PetscFunctionReturn(0);
@@ -542,12 +542,12 @@ PetscErrorCode BSSCR_PCSetFromOptions_GtKG( PC pc )
 	PC_GtKG ctx = (PC_GtKG)pc->data;
 	PetscTruth ivalue, flg;
 	
-	PetscOptionsGetTruth( PETSC_NULL, "-pc_gtkg_monitor", &ivalue, &flg );
+	PetscOptionsGetTruth( PETSC_NULLPTR, "-pc_gtkg_monitor", &ivalue, &flg );
 	if( flg==PETSC_TRUE ) {
 		ctx->monitor_activated = ivalue;
 	}
 	
-	PetscOptionsGetTruth( PETSC_NULL, "-pc_gtkg_monitor_rhs_consistency", &ivalue, &flg );
+	PetscOptionsGetTruth( PETSC_NULLPTR, "-pc_gtkg_monitor_rhs_consistency", &ivalue, &flg );
 	if( flg==PETSC_TRUE ) {
 		ctx->monitor_rhs_consistency = ivalue;
 	}
@@ -569,19 +569,19 @@ PetscErrorCode BSSCR_PCCreate_GtKG( PC pc )
 	ierr = Stg_PetscNew( _PC_GtKG,&pc_data);CHKERRQ(ierr);
 	
 	/* init ctx */
-	pc_data->K   = PETSC_NULL;
-	pc_data->G   = PETSC_NULL;
-	pc_data->M   = PETSC_NULL;
-	pc_data->GtG = PETSC_NULL;
+	pc_data->K   = PETSC_NULLPTR;
+	pc_data->G   = PETSC_NULLPTR;
+	pc_data->M   = PETSC_NULLPTR;
+	pc_data->GtG = PETSC_NULLPTR;
 	pc_data->form_GtG          = PETSC_TRUE;
-	pc_data->ksp               = PETSC_NULL;
+	pc_data->ksp               = PETSC_NULLPTR;
 	pc_data->monitor_activated = PETSC_FALSE;
 	pc_data->monitor_rhs_consistency = PETSC_FALSE;
 	
-	pc_data->s = PETSC_NULL;
-	pc_data->t = PETSC_NULL;
-	pc_data->X = PETSC_NULL;
-	pc_data->inv_diag_M = PETSC_NULL;
+	pc_data->s = PETSC_NULLPTR;
+	pc_data->t = PETSC_NULLPTR;
+	pc_data->X = PETSC_NULLPTR;
+	pc_data->inv_diag_M = PETSC_NULLPTR;
 	
 	/* create internals */
 	KSPCreate( ((PetscObject)pc)->comm, &pc_data->ksp );
@@ -607,8 +607,8 @@ PetscErrorCode BSSCR_PCCreate_GtKG( PC pc )
 
 
 /*
-K & G must different to PETSC_NULL
-M can be PETSC_NULL
+K & G must different to PETSC_NULLPTR
+M can be PETSC_NULLPTR
 */
 PetscErrorCode BSSCR_PCGtKGSet_Operators( PC pc, Mat K, Mat G, Mat M )
 {
@@ -642,7 +642,7 @@ PetscErrorCode BSSCR_PCGtKGAttachNullSpace( PC pc )
 	BSSCR_pc_error( pc, "__func__" );
 	
 	/* Attach a null space */
-	MatNullSpaceCreate( PETSC_COMM_WORLD, PETSC_TRUE, PETSC_NULL, PETSC_NULL, &nsp );
+	MatNullSpaceCreate( PETSC_COMM_WORLD, PETSC_TRUE, PETSC_NULLPTR, PETSC_NULLPTR, &nsp );
 #if ( (PETSC_VERSION_MAJOR >= 3) && (PETSC_VERSION_MINOR <6) )
 	KSPSetNullSpace( ctx->ksp, nsp );
 #else
@@ -667,7 +667,7 @@ PetscErrorCode BSSCR_PCGtKGGet_KSP( PC pc, KSP *ksp )
 	BSSCR_pc_error( pc, "__func__" );
 	
 	
-	if( ksp != PETSC_NULL ) {
+	if( ksp != PETSC_NULLPTR ) {
 		(*ksp) = ctx->ksp;
 	}
 	
@@ -681,7 +681,7 @@ PetscErrorCode BSSCR_PCGtKGSet_KSP( PC pc, KSP ksp )
 	BSSCR_pc_error( pc, "__func__" );
 	
 	
-	if( ctx->ksp != PETSC_NULL ) {
+	if( ctx->ksp != PETSC_NULLPTR ) {
 		Stg_KSPDestroy(&ctx->ksp);
 	}
 	ctx->ksp = ksp;

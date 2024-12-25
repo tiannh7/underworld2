@@ -56,7 +56,7 @@ void bsscr_summary(KSP_BSSCR * bsscrp_self, KSP ksp_S, KSP ksp_inner,
       /***************************************************************************************************************/
 
       flg = PETSC_FALSE; /* Off by default */
-	    PetscOptionsGetTruth( PETSC_NULL, "-scr_ksp_solution_summary", &flg, &found );
+	    PetscOptionsGetTruth( PETSC_NULLPTR, "-scr_ksp_solution_summary", &flg, &found );
 
       if(flg) {
 	    PetscScalar KuNorm;

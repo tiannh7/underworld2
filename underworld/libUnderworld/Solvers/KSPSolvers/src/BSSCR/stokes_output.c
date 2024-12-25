@@ -49,9 +49,9 @@ PetscErrorCode BSSCR_stokes_output( PetscViewer v, Mat stokes_A, Vec stokes_b, V
 	Vec f,h, u,p;
 	
 	
-	K = G = D = C = PETSC_NULL;
-	f = h = PETSC_NULL;
-	u = p = PETSC_NULL;
+	K = G = D = C = PETSC_NULLPTR;
+	f = h = PETSC_NULLPTR;
+	u = p = PETSC_NULLPTR;
 	
 	MatNestGetSubMat( stokes_A, 0,0, &K );
 	MatNestGetSubMat( stokes_A, 0,1, &G );
@@ -112,9 +112,9 @@ PetscErrorCode BSSCR_stokes_output( PetscViewer v, Mat stokes_A, Vec stokes_b, V
 		VecMin( K_d, &loc_min, &min );
 		PetscViewerASCIIPrintf( v,"Algebraic contrast: max(K_d)=%.3e [%d] , min(K_d)=%.3e [%d] , max(K_d)/min(K_d) = %.8e \n", max,loc_max, min,loc_min, max/min );
 		
-		MatGetRowMax( K, K_d, PETSC_NULL );
+		MatGetRowMax( K, K_d, PETSC_NULLPTR );
 		VecMax( K_d, &loc_max, &max );
-		MatGetRowMin( K, K_d, PETSC_NULL );
+		MatGetRowMin( K, K_d, PETSC_NULLPTR );
 		VecAbs( K_d );
 		VecMin( K_d, &loc_min, &min );
 		PetscViewerASCIIPrintf( v,"Algebraic contrast:   max(K)=%.3e [%d] , |min(K)|=%.3e [%d]  ,   max(K)/|min(K)| = %.8e \n", max,loc_max, min,loc_min, max/min );

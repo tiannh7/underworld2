@@ -73,7 +73,7 @@ PetscErrorCode BSSCR_MatStokesBlock_ApplyScaling( MatStokesBlockScaling BA, Mat 
 	
 	
 	/* get the subblock solution and rhs */
-	if( x != PETSC_NULL ) {
+	if( x != PETSC_NULLPTR ) {
 		VecNestGetSubVec( x, 0, &u );
 		VecNestGetSubVec( x, 1, &p );
 		
@@ -81,7 +81,7 @@ PetscErrorCode BSSCR_MatStokesBlock_ApplyScaling( MatStokesBlockScaling BA, Mat 
 		VecPointwiseDivide( p, p,R2);
 		
 	}
-	if( b != PETSC_NULL ) {
+	if( b != PETSC_NULLPTR ) {
 		VecNestGetSubVec( b, 0, &f );
 		VecNestGetSubVec( b, 1, &h );
 		
@@ -97,11 +97,11 @@ PetscErrorCode BSSCR_MatStokesBlock_ApplyScaling( MatStokesBlockScaling BA, Mat 
 	MatNestGetSubMat( A, 1,0, &D );
 	MatNestGetSubMat( A, 1,1, &C );
 	
-	if( K != PETSC_NULL ) {		MatDiagonalScale( K, L1,R1 );		}
-	if( G != PETSC_NULL ) {		MatDiagonalScale( G, L1,R2 );		}
-	if( D != PETSC_NULL && !sym ) {	MatDiagonalScale( D, L2,R1 );		}
-	if( C != PETSC_NULL ) {		MatDiagonalScale( C, L2,R2 );		}
-	if( S != PETSC_NULL ) {		MatDiagonalScale( S, L2,R2 );		}
+	if( K != PETSC_NULLPTR ) {		MatDiagonalScale( K, L1,R1 );		}
+	if( G != PETSC_NULLPTR ) {		MatDiagonalScale( G, L1,R2 );		}
+	if( D != PETSC_NULLPTR && !sym ) {	MatDiagonalScale( D, L2,R1 );		}
+	if( C != PETSC_NULLPTR ) {		MatDiagonalScale( C, L2,R2 );		}
+	if( S != PETSC_NULLPTR ) {		MatDiagonalScale( S, L2,R2 );		}
 
 	PetscFunctionReturn(0);
 }
@@ -122,7 +122,7 @@ PetscErrorCode BSSCR_MatStokesBlock_ApplyScaling2( MatStokesBlockScaling BA, Mat
 	
 	
 	/* get the subblock solution and rhs */
-	if( x != PETSC_NULL ) {
+	if( x != PETSC_NULLPTR ) {
 		VecNestGetSubVec( x, 0, &u );
 		VecNestGetSubVec( x, 1, &p );
 		
@@ -130,7 +130,7 @@ PetscErrorCode BSSCR_MatStokesBlock_ApplyScaling2( MatStokesBlockScaling BA, Mat
 		VecPointwiseDivide( p, p,R2);
 		
 	}
-	if( b != PETSC_NULL ) {
+	if( b != PETSC_NULLPTR ) {
 		VecNestGetSubVec( b, 0, &f );
 		VecNestGetSubVec( b, 1, &h );
 		
@@ -146,12 +146,12 @@ PetscErrorCode BSSCR_MatStokesBlock_ApplyScaling2( MatStokesBlockScaling BA, Mat
 	MatNestGetSubMat( A, 1,0, &D );
 	MatNestGetSubMat( A, 1,1, &C );
 	
-	if( K != PETSC_NULL ) {		MatDiagonalScale( K, L1,R1 );		}
-	if( G != PETSC_NULL ) {		MatDiagonalScale( G, L1,R2 );		}
-	if( D != PETSC_NULL && !sym ) {	MatDiagonalScale( D, L2,R1 );		}
-	if( C != PETSC_NULL ) {		MatDiagonalScale( C, L2,R2 );		}
-	if( S != PETSC_NULL ) {		MatDiagonalScale( S, L2,R2 );		}
-	if( M != PETSC_NULL ) {		MatDiagonalScale( M, L2,R2 );		}
+	if( K != PETSC_NULLPTR ) {		MatDiagonalScale( K, L1,R1 );		}
+	if( G != PETSC_NULLPTR ) {		MatDiagonalScale( G, L1,R2 );		}
+	if( D != PETSC_NULLPTR && !sym ) {	MatDiagonalScale( D, L2,R1 );		}
+	if( C != PETSC_NULLPTR ) {		MatDiagonalScale( C, L2,R2 );		}
+	if( S != PETSC_NULLPTR ) {		MatDiagonalScale( S, L2,R2 );		}
+	if( M != PETSC_NULLPTR ) {		MatDiagonalScale( M, L2,R2 );		}
 	
 	PetscFunctionReturn(0);
 }
@@ -165,8 +165,8 @@ PetscErrorCode BSSCR_MatStokesBlockScalingCreate( MatStokesBlockScaling *_BA )
 	
 	PetscMalloc( sizeof(struct _p_MatStokesBlockScaling), &BA );
 	
-	BA->Lz = PETSC_NULL;
-	BA->Rz = PETSC_NULL;
+	BA->Lz = PETSC_NULLPTR;
+	BA->Rz = PETSC_NULLPTR;
 	
 	BA->scaling_exists              = PETSC_FALSE;
 	BA->scalings_have_been_inverted = PETSC_FALSE;
@@ -184,14 +184,14 @@ PetscErrorCode BSSCR_MatStokesBlockScalingDestroy( MatStokesBlockScaling BA )
 	
 	if( BA->scaling_exists == PETSC_FALSE ) PetscFunctionReturn(0); 
 	
-	if( BA->Lz != PETSC_NULL ) {
+	if( BA->Lz != PETSC_NULLPTR ) {
 		Stg_VecDestroy(&BA->Lz );
-		BA->Lz = PETSC_NULL;
+		BA->Lz = PETSC_NULLPTR;
 	}
 	
-	if( BA->Rz != PETSC_NULL ) {
+	if( BA->Rz != PETSC_NULLPTR ) {
 		Stg_VecDestroy(&BA->Rz );
-		BA->Rz = PETSC_NULL;
+		BA->Rz = PETSC_NULLPTR;
 	}
 	
 	PetscFree( BA );
@@ -323,17 +323,17 @@ PetscErrorCode BSSCR_MatStokesBlockReportOperatorScales( Mat A, PetscTruth sym )
 	MatNestGetSubMat( A, 1,1, &C );
 	
 	
-	MatGetVecs( K, PETSC_NULL, &rA );
+	MatGetVecs( K, PETSC_NULLPTR, &rA );
 	VecDuplicate( rA, &rG );
 	
 	/* Report the row max and mins */
-	if (K!=PETSC_NULL) {
+	if (K!=PETSC_NULLPTR) {
                 PetscReal KNorm;
-		MatGetRowMax( K, rA, PETSC_NULL );
+		MatGetRowMax( K, rA, PETSC_NULLPTR );
 		VecMax( rA, &loc, &max );
 		PetscPrintf( PETSC_COMM_WORLD, "Sup_max(K) = %g \n", max );
 		
-		MatGetRowMinAbs( K, rA, PETSC_NULL );
+		MatGetRowMinAbs( K, rA, PETSC_NULLPTR );
 		VecMin( rA, &loc, &min );
 		PetscPrintf( PETSC_COMM_WORLD, "Sup_min(K) = %g \n", min );
 
@@ -341,40 +341,40 @@ PetscErrorCode BSSCR_MatStokesBlockReportOperatorScales( Mat A, PetscTruth sym )
 		PetscPrintf( PETSC_COMM_WORLD, "norm_1(K)  = %g \n\n",KNorm);
 	}
 	
-	if( G != PETSC_NULL ) {       
-		MatGetRowMax( G, rG, PETSC_NULL );
+	if( G != PETSC_NULLPTR ) {       
+		MatGetRowMax( G, rG, PETSC_NULLPTR );
 		VecMax( rG, &loc, &max );
 		PetscPrintf( PETSC_COMM_WORLD, "Sup_max(G) = %g \n", max );
 		
-		MatGetRowMinAbs( G, rG, PETSC_NULL );
+		MatGetRowMinAbs( G, rG, PETSC_NULLPTR );
 		VecMin( rG, &loc, &min );
 		PetscPrintf( PETSC_COMM_WORLD, "Sup_min(G) = %g \n", min );
 	}
 	
-	if( D != PETSC_NULL && !sym ) {
+	if( D != PETSC_NULLPTR && !sym ) {
                 Vec rD;
 
-                MatGetVecs( D, PETSC_NULL, &rD );
-		MatGetRowMax( D, rD, PETSC_NULL );
+                MatGetVecs( D, PETSC_NULLPTR, &rD );
+		MatGetRowMax( D, rD, PETSC_NULLPTR );
 		VecMax( rD, &loc, &max );
 		PetscPrintf( PETSC_COMM_WORLD, "Sup_max(D) = %g \n", max );
 		
-		MatGetRowMinAbs( D, rD, PETSC_NULL );
+		MatGetRowMinAbs( D, rD, PETSC_NULLPTR );
 		VecMin( rD, &loc, &min );
 		PetscPrintf( PETSC_COMM_WORLD, "Sup_min(D) = %g \n", min );
 
                 Stg_VecDestroy(&rD );
 	}
 	
-	if( C != PETSC_NULL ) {
+	if( C != PETSC_NULLPTR ) {
 		Vec cG;
 
-		MatGetVecs( G, &cG, PETSC_NULL );
-		MatGetRowMax( C, cG, PETSC_NULL );
+		MatGetVecs( G, &cG, PETSC_NULLPTR );
+		MatGetRowMax( C, cG, PETSC_NULLPTR );
 		VecMax( cG, &loc, &max );
 		PetscPrintf( PETSC_COMM_WORLD, "Sup_max(C) = %g \n", max );
 		
-		MatGetRowMin( C, cG, PETSC_NULL );
+		MatGetRowMin( C, cG, PETSC_NULLPTR );
 		VecMin( cG, &loc, &min );
 		PetscPrintf( PETSC_COMM_WORLD, "Sup_min(C) = %g \n\n", min );
 	
@@ -420,7 +420,7 @@ PetscErrorCode BSSCR_MatStokesBlockDefaultBuildScaling( MatStokesBlockScaling BA
 	
 	/* Get magnitude of K */  
 	//px_MatGetAbsRowSum( K, rA );
-	MatGetRowMax( K, rA, PETSC_NULL );
+	MatGetRowMax( K, rA, PETSC_NULLPTR );
 	
 	VecSqrt( rA );  
 	VecReciprocal( rA );
@@ -432,7 +432,7 @@ PetscErrorCode BSSCR_MatStokesBlockDefaultBuildScaling( MatStokesBlockScaling BA
 	
 	/* Get magnitude of G */
 	//px_MatGetAbsRowSum( G, rG );
-	MatGetRowMax( G, rG, PETSC_NULL );
+	MatGetRowMax( G, rG, PETSC_NULLPTR );
 	
 	VecDot( rG, rG, &rg2 );
 	VecGetSize( rG, &N );

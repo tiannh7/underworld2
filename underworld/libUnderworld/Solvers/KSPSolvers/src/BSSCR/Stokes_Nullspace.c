@@ -27,7 +27,7 @@ PetscErrorCode BSSCR_MatContainsConstNullSpace(Mat A, Vec nsp_vec, PetscTruth *h
 
     MatGetVecs(A, &r, &l); /* l = A r */
 
-    if(nsp_vec == PETSC_NULL) {
+    if(nsp_vec == PETSC_NULLPTR) {
 	PetscInt N;
 
 	VecGetSize(r, &N);
@@ -88,7 +88,7 @@ PetscErrorCode BSSCR_MatGtKinvG_ContainsConstantNullSpace(
 //		PetscPrintf( PETSC_COMM_WORLD, "Constant null space not present, " );
 		*has_cnst_nullsp = PETSC_FALSE;
 	}
-//	PetscPrintf( PETSC_COMM_WORLD, "|| [S]{1} || = %G€n", nrm );
+//	PetscPrintf( PETSC_COMM_WORLD, "|| [S]{1} || = %Gï¿½n", nrm );
 	
 	
 	PetscFunctionReturn(0);
@@ -102,7 +102,7 @@ PetscErrorCode BSSCR_VecRemoveConstNullspace(Vec v, Vec nsp_vec) {
 
     VecGetSize(v, &N);
     if(N > 0) {
-	if(nsp_vec == PETSC_NULL) {
+	if(nsp_vec == PETSC_NULLPTR) {
 	    VecSum(v, &sum);
 	    sum  = sum/(-1.0*(PetscScalar)N);
 	    VecShift(v, sum);
@@ -151,17 +151,17 @@ PetscErrorCode BSSCR_CheckNullspace(KSP ksp_S, Mat S, Vec h_hat, MatStokesBlockS
     
     found = PETSC_FALSE;
     removens = PETSC_FALSE;
-    PetscOptionsGetTruth(PETSC_NULL, "-remove_pressure_null_space", &removens, &found );
-    //PetscOptionsGetString( PETSC_NULL, "-no_remove_nullspace", name, PETSC_MAX_PATH_LEN-1, &flg );
+    PetscOptionsGetTruth(PETSC_NULLPTR, "-remove_pressure_null_space", &removens, &found );
+    //PetscOptionsGetString( PETSC_NULLPTR, "-no_remove_nullspace", name, PETSC_MAX_PATH_LEN-1, &flg );
     if( removens ) {
 	PetscPrintf( PETSC_COMM_WORLD, "\t* Checking for NullSpace \n");
 
 	/* Create a vector to scale. */
-	MatGetVecs(S, &nsp_vec, PETSC_NULL);
+	MatGetVecs(S, &nsp_vec, PETSC_NULLPTR);
 	VecSet(nsp_vec, 1.0);
 	/* Scale newly created vector. */
-	//PetscOptionsGetString(PETSC_NULL, "-no_scale", name, PETSC_MAX_PATH_LEN - 1, &flg);
-	//PetscOptionsGetString(PETSC_NULL, "-mv_scale", name, PETSC_MAX_PATH_LEN - 1, &flg2);
+	//PetscOptionsGetString(PETSC_NULLPTR, "-no_scale", name, PETSC_MAX_PATH_LEN - 1, &flg);
+	//PetscOptionsGetString(PETSC_NULLPTR, "-mv_scale", name, PETSC_MAX_PATH_LEN - 1, &flg2);
 	//if(!flg || flg2) {
 	if( BA ) {
 	    Vec R2;
@@ -175,7 +175,7 @@ PetscErrorCode BSSCR_CheckNullspace(KSP ksp_S, Mat S, Vec h_hat, MatStokesBlockS
 	    nsp_data_t nsp_data;
 
 	    PetscPrintf( PETSC_COMM_WORLD, "\t* Configuring Seg KSP with NullSpace \n");
-	    MatNullSpaceCreate( PETSC_COMM_WORLD, PETSC_FALSE, PETSC_NULL, PETSC_NULL, &nsp );
+	    MatNullSpaceCreate( PETSC_COMM_WORLD, PETSC_FALSE, PETSC_NULLPTR, PETSC_NULLPTR, &nsp );
 	    nsp_data.num_nsp_vecs = 1;
 	    nsp_data.nsp_vecs = &nsp_vec;
 	    MatNullSpaceSetFunction(nsp, BSSCR_NSPRemoveAll, &nsp_data);

@@ -432,9 +432,9 @@ void SROpGenerator_GenOps( SROpGenerator* self, Mat* pOps, Mat* rOps ) {
 			//PETScMatrix_SetNonZeroStructure( (PETScMatrix*)P, 0, nDiagNonZeros, nOffDiagNonZeros );
 		//	MPI_Comm_size( self->solver->comm, &nProcs );
 		//	if( nProcs > 1 )
-		//		MatMPIAIJSetPreallocation( P, PETSC_NULL, nDiagNonZeros, PETSC_NULL, nOffDiagNonZeros );
+		//		MatMPIAIJSetPreallocation( P, PETSC_NULLPTR, nDiagNonZeros, PETSC_NULLPTR, nOffDiagNonZeros );
 		//	else
-		//		MatSeqAIJSetPreallocation( P, PETSC_NULL, nDiagNonZeros );
+		//		MatSeqAIJSetPreallocation( P, PETSC_NULLPTR, nDiagNonZeros );
 		//	FreeArray( nDiagNonZeros );
 		//	FreeArray( nOffDiagNonZeros );
 		//}
@@ -856,7 +856,7 @@ Mat SROpGenerator_SimpleFinestLevel( SROpGenerator *self ) {
    Grid_SetSizes( grid[0], sideSizes );
 
    /* Determine preallocation information */
-   MatGetVecs( P, PETSC_NULL, &vec_d_nnz );
+   MatGetVecs( P, PETSC_NULLPTR, &vec_d_nnz );
    VecDuplicate( vec_d_nnz, &vec_o_nnz );
 
    /* Loop over fine nodes. */
@@ -955,15 +955,15 @@ Mat SROpGenerator_SimpleFinestLevel( SROpGenerator *self ) {
 
    Stg_PetscObjectTypeCompare( (PetscObject)vec_o_nnz, VECSEQ, &is_seq );
    if(nproc==1) {
-      MatSeqAIJSetPreallocation( P, PETSC_NULL, d_nnz );
+      MatSeqAIJSetPreallocation( P, PETSC_NULLPTR, d_nnz );
    }
    else {
 //     for( kk=0; kk<(er-sr); kk++ ) {
 //       printf( "[%d]: row=%d : d_nnz=%d : o_nnz=%d \n", rank, kk+sr, d_nnz[kk], o_nnz[kk] );
 //     }
-      MatMPIAIJSetPreallocation( P, PETSC_NULL, d_nnz, PETSC_NULL, o_nnz );
+      MatMPIAIJSetPreallocation( P, PETSC_NULLPTR, d_nnz, PETSC_NULLPTR, o_nnz );
 
-//    MatMPIAIJSetPreallocation( P, d_nz,PETSC_NULL, o_nz,PETSC_NULL );
+//    MatMPIAIJSetPreallocation( P, d_nz,PETSC_NULLPTR, o_nz,PETSC_NULLPTR );
    }
 
    /* Loop over fine nodes. */
@@ -1136,7 +1136,7 @@ Mat SROpGenerator_SimpleCoarserLevel( SROpGenerator *self, int level ) {
 /*
    Stg_MatCreateAIJ( MPI_COMM_WORLD,
                     PETSC_DECIDE, PETSC_DECIDE, nGlobalEqs[1], nGlobalEqs[0],
-                    o_nz, PETSC_NULL, d_nz, PETSC_NULL, &P );
+                    o_nz, PETSC_NULLPTR, d_nz, PETSC_NULLPTR, &P );
    MatGetOwnershipRange( P, &eqRangeBegin, &eqRangeEnd );
 */
    MatCreate( MPI_COMM_WORLD, &P );
@@ -1182,7 +1182,7 @@ Mat SROpGenerator_SimpleCoarserLevel( SROpGenerator *self, int level ) {
    Grid_SetSizes( grid[0], sideSizes[0] );
 
    /* Determine preallocation */
-   MatGetVecs( P, PETSC_NULL, &vec_d_nnz );
+   MatGetVecs( P, PETSC_NULLPTR, &vec_d_nnz );
    VecDuplicate( vec_d_nnz, &vec_o_nnz );
    PetscObjectGetComm( (PetscObject)P, &comm );
    MPI_Comm_size( comm, &nproc );
@@ -1274,10 +1274,10 @@ Mat SROpGenerator_SimpleCoarserLevel( SROpGenerator *self, int level ) {
 
 
    if(nproc==1) {
-      MatSeqAIJSetPreallocation( P, PETSC_NULL, d_nnz );
+      MatSeqAIJSetPreallocation( P, PETSC_NULLPTR, d_nnz );
    }
    else {
-      MatMPIAIJSetPreallocation( P, PETSC_NULL, d_nnz, PETSC_NULL, o_nnz );
+      MatMPIAIJSetPreallocation( P, PETSC_NULLPTR, d_nnz, PETSC_NULLPTR, o_nnz );
    }
 
 

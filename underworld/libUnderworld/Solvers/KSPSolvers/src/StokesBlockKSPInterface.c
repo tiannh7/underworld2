@@ -244,14 +244,14 @@ void SBKSP_GetStokesOperators(
 		Vec *f,Vec *h,Vec *u,Vec *p )
 {
 
-	*K = *G = *D = *C = PETSC_NULL;
+	*K = *G = *D = *C = PETSC_NULLPTR;
 	if (stokesSLE->kStiffMat){      *K = SBKSP_GetPetscMatrix( stokesSLE->kStiffMat->matrix );     }
 	if (stokesSLE->gStiffMat){      *G = SBKSP_GetPetscMatrix( stokesSLE->gStiffMat->matrix );     }
 	if (stokesSLE->dStiffMat){      *D = SBKSP_GetPetscMatrix( stokesSLE->dStiffMat->matrix );     }
 	if (stokesSLE->cStiffMat){      *C = SBKSP_GetPetscMatrix( stokesSLE->cStiffMat->matrix );     }
 
 	/* preconditioner */
-	*approxS = PETSC_NULL;
+	*approxS = PETSC_NULLPTR;
 	if( ((StokesBlockKSPInterface*)stokesSLE->solver)->preconditioner ) {
 		StiffnessMatrix *preconditioner;
 
@@ -259,11 +259,11 @@ void SBKSP_GetStokesOperators(
 		*approxS = SBKSP_GetPetscMatrix( preconditioner->matrix );
 	}
 
-	*f = *h = PETSC_NULL;
+	*f = *h = PETSC_NULLPTR;
 	if (stokesSLE->fForceVec){      *f = SBKSP_GetPetscVector( stokesSLE->fForceVec->vector );     }
 	if (stokesSLE->hForceVec){      *h = SBKSP_GetPetscVector( stokesSLE->hForceVec->vector );     }
 
-	*u = *p = PETSC_NULL;
+	*u = *p = PETSC_NULLPTR;
 	if (stokesSLE->uSolnVec){       *u = SBKSP_GetPetscVector( stokesSLE->uSolnVec->vector );      }
 	if (stokesSLE->pSolnVec){       *p = SBKSP_GetPetscVector( stokesSLE->pSolnVec->vector );      }
 
@@ -279,7 +279,7 @@ void _StokesBlockKSPInterface_Solve( void* solver, void* _stokesSLE ) {
 
   found = PETSC_FALSE;
   get_flops = PETSC_FALSE;
-  PetscOptionsGetTruth( PETSC_NULL, "-get_flops", &get_flops, &found);
+  PetscOptionsGetTruth( PETSC_NULLPTR, "-get_flops", &get_flops, &found);
   if(get_flops){
     PetscGetFlops(&flopsA); }
 
@@ -333,7 +333,7 @@ PetscErrorCode _BlockSolve( void* solver, void* _stokesSLE ) {
     Solver->DIsSym = sym;
   }
   flg=PETSC_FALSE;
-  PetscOptionsHasName(PETSC_NULL,"-use_petsc_ksp",&flg);
+  PetscOptionsHasName(PETSC_NULLPTR,"-use_petsc_ksp",&flg);
   if (flg) {
     if( !C ) {
       /* Everything in this bracket, dependent on !C, is to build
@@ -352,7 +352,7 @@ PetscErrorCode _BlockSolve( void* solver, void* _stokesSLE ) {
 #endif
       MatGetType( G, &mtype );
       MatSetType( C, mtype );
-      MatGetVecs( G, &V, PETSC_NULL );
+      MatGetVecs( G, &V, PETSC_NULLPTR );
       VecSet(V, 0.0);
       //VecSet(h, 1.0);
       ierr = VecAssemblyBegin( V );CHKERRQ(ierr);
@@ -416,7 +416,7 @@ PetscErrorCode _BlockSolve( void* solver, void* _stokesSLE ) {
     /* for the moment then, this function not completely agnostic about our KSPs */
     //if(!strcmp("bsscr",stokes_ksp->type_name)){/* if is bsscr then set up the data on the ksp */
     flg=PETSC_FALSE;
-    PetscOptionsHasName(PETSC_NULL,"-use_petsc_ksp",&flg);
+    PetscOptionsHasName(PETSC_NULLPTR,"-use_petsc_ksp",&flg);
     if (!flg) {
       ((KSP_COMMON*)(stokes_ksp->data))->st_sle         = Solver->st_sle;
       ((KSP_COMMON*)(stokes_ksp->data))->mg             = Solver->mg;

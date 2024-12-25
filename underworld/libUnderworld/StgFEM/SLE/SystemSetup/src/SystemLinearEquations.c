@@ -175,7 +175,7 @@ void _SystemLinearEquations_Init(
    self->nlConvergedEP = EntryPoint_New( self->nlConvergedEPName, EntryPoint_2VoidPtr_CastType );
    /* END LUKE'S FRICTIONAL BCS BIT */
    self->nlFormJacobian = False;
-   self->nlCurIterate = PETSC_NULL;
+   self->nlCurIterate = PETSC_NULLPTR;
 
    /* Initialise MG stuff. */
    self->mgEnabled = False;
@@ -710,7 +710,7 @@ void SystemLinearEquations_NewtonExecute( void* sle, void* _context ) {
 
    SNESSetOptionsPrefix( snes, self->optionsPrefix );
    SNESSetFromOptions( snes );
-   SNESSolve( snes, PETSC_NULL, self->X );
+   SNESSolve( snes, PETSC_NULLPTR, self->X );
 }
 
 /* do this at end of solve step */
@@ -732,7 +732,7 @@ void SystemLinearEquations_NewtonMFFDExecute( void* sle, void* _context ) {
    VecDuplicate( SystemLinearEquations_GetSolutionVectorAt( self, 0 )->vector, &F );
 
    /* creates the nonlinear solver */
-   if( self->nlSolver != PETSC_NULL )
+   if( self->nlSolver != PETSC_NULLPTR )
       Stg_SNESDestroy(&self->nlSolver );
    SNESCreate( self->comm, &self->nlSolver );
    SNESSetFunction( self->nlSolver, F, self->_buildF, _context );
