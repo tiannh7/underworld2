@@ -41,7 +41,7 @@ extern const Type DVCWeights_Type;
 
 struct DVCWeights { __DVCWeights };
         
-#define DVC_INC 150
+#define DVC_INC 500
         
 struct cell{
     int p;/*particle index number*/
